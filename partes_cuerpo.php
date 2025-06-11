@@ -114,7 +114,8 @@
 </div>
     
 <script>
-    new Vue({
+    // Crear instancia Vue accesible globalmente
+    window.vueApp = new Vue({
         el: "#app",
         data: {
             selectedParts: [],

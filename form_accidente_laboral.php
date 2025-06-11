@@ -258,7 +258,7 @@
                     
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-save me-2"></i>Guardar Ficha
+                            <i class="fas fa-save me-2"></i>Guardar
                         </button>
                     </div>
                 </form>
@@ -330,26 +330,9 @@
             document.getElementById('antiguedad').value = diffYears + ' años';
         });
 
-        // Función para seleccionar partes del cuerpo
-        function selectBodyPart(event) {
-            const rect = event.currentTarget.getBoundingClientRect();
-            const x = ((event.clientX - rect.left) / rect.width) * 100;
-            const y = ((event.clientY - rect.top) / rect.height) * 100;
-            
-            const injuryPoint = document.createElement('div');
-            injuryPoint.className = 'injury-point';
-            injuryPoint.style.left = x + '%';
-            injuryPoint.style.top = y + '%';
-            injuryPoint.title = 'Zona afectada';
-            injuryPoint.onclick = function() { this.remove(); };
-            
-            event.currentTarget.appendChild(injuryPoint);
-        }
-
+        
         // Validación del formulario
         document.getElementById('accidentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
             const requiredFields = document.querySelectorAll('.required-field');
             let isValid = true;
             
@@ -362,14 +345,12 @@
                 }
             });
             
-            if (isValid) {
-                // Aquí iría la lógica para enviar los datos
-                alert('Ficha de accidente guardada correctamente');
-                console.log('Datos del formulario:', new FormData(this));
-            } else {
+            if (!isValid) {
+                e.preventDefault();
                 alert('Por favor complete todos los campos obligatorios');
             }
         });
+
 
         // Función para buscar empresa por CUIT
         document.querySelector('[onclick*="buscar"]')?.addEventListener('click', function() {

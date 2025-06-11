@@ -345,7 +345,7 @@
                     
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-save me-2"></i>Guardar Control de Ausentismo
+                            <i class="fas fa-save me-2"></i>Guardar
                         </button>
                     </div>
                 </form>
@@ -452,8 +452,6 @@
 
         // Validación del formulario
         document.getElementById('ausentismoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
             const requiredFields = document.querySelectorAll('.required-field');
             let isValid = true;
             
@@ -466,13 +464,12 @@
                 }
             });
             
-            if (isValid) {
-                alert('Control de ausentismo guardado correctamente');
-                console.log('Datos del formulario:', new FormData(this));
-            } else {
+            if (!isValid) {
+                e.preventDefault();
                 alert('Por favor complete todos los campos obligatorios');
             }
         });
+
 
     </script>
 
