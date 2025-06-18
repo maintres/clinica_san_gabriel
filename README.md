@@ -1,258 +1,318 @@
-# 🏥 Sistema de Gestión Médica Laboral - Clínica San Gabriel
+# Clínica San Gabriel - Sistema de Gestión de Accidentes y Ausentismo
 
-## 📋 **Descripción**
+## Descripción del Proyecto
 
-Sistema web para la gestión integral de **accidentes laborales** y **control de ausentismo** en empresas. Diseñado específicamente para clínicas de medicina laboral que requieren un registro detallado y profesional de incidents y licencias médicas.
+Sistema web para la gestión de accidentes laborales y control de ausentismo de la Clínica San Gabriel. El proyecto incluye dos formularios principales que generan datos en formato JSON para su posterior procesamiento y almacenamiento en base de datos.
 
----
-
-## 🎯 **Funcionalidades Principales**
-
-### 📊 **Gestión de Accidentes Laborales**
-- ✅ Registro completo de accidentes con datos de empresa y empleado
-- ✅ Selección visual de partes del cuerpo afectadas mediante SVG interactivo
-- ✅ Clasificación por tipo de accidente y gravedad
-- ✅ Seguimiento médico con diagnósticos y tratamientos
-- ✅ Control de intervención ART y derivaciones
-- ✅ Cálculo automático de antigüedad laboral
-
-### 🗓️ **Control de Ausentismo**
-- ✅ Gestión de licencias médicas (Justificadas, Injustificadas, ART)
-- ✅ Cálculo automático de días de ausentismo
-- ✅ Seguimiento de certificados médicos y vencimientos
-- ✅ Control de aptitudes para reingreso laboral
-- ✅ Gestión de auditorías médicas
-- ✅ Registro de reubicaciones laborales
-
-### 🎨 **Selector de Partes del Cuerpo**
-- ✅ Interfaz visual SVG interactiva del cuerpo humano
-- ✅ Selección múltiple de partes afectadas
-- ✅ Categorización por grupos anatómicos
-- ✅ Vista clara y profesional para reportes médicos
-
----
-
-## 🛠️ **Tecnologías Utilizadas**
-
-| Tecnología | Versión | Propósito |
-|-----------|---------|-----------|
-| **PHP** | 7.4+ | Backend y procesamiento de formularios |
-| **MySQL** | 5.7+ | Base de datos |
-| **Bootstrap** | 5.3.0 | Framework CSS responsivo |
-| **Vue.js** | 2.6.14 | Componente selector de partes del cuerpo |
-| **FontAwesome** | 6.4.0 | Iconografía |
-| **SVG** | - | Gráficos del cuerpo humano |
-
----
-
-## 📁 **Estructura del Proyecto**
+## Estructura del Proyecto
 
 ```
 clinica_san_gabriel/
-├── index.php                      # Página principal
-├── header.php                     # Encabezado común
-├── footer.php                     # Pie de página común
-├── form_accidente_laboral.php     # Formulario de accidentes
-├── form_control_ausentismo.php    # Formulario de ausentismo
-├── partes_cuerpo.php              # Componente selector de partes
-├── estructura_json.json           # Estructuras de datos para APIs
-├── svg-cuerpo.svg                 # Gráfico SVG del cuerpo
-├── logo-clinica-letras.png        # Logo de la clínica
-└── README.md                      # Documentación
+├── form_accidente_laboral.php      # Formulario de accidentes laborales
+├── form_control_ausentismo.php     # Formulario de control de ausentismo
+├── partes_cuerpo.php               # Componente SVG para selección de partes del cuerpo
+├── svg-cuerpo.svg                  # Archivo SVG del cuerpo humano
+├── header.php                      # Header común de la aplicación
+├── footer.php                      # Footer común de la aplicación
+├── conexion.php                    # Configuración de conexión a base de datos
+├── ejemplo_accidente_laboral.json  # Ejemplo de JSON generado por accidente laboral
+├── ejemplo_control_ausentismo.json # Ejemplo de JSON generado por control de ausentismo
+└── README.md                       # Este archivo
 ```
 
----
+## Formularios Disponibles
 
-## 🚀 **Instalación y Configuración**
+### 1. Formulario de Accidente Laboral (`form_accidente_laboral.php`)
 
-### **Requisitos Previos**
-- Servidor web (Apache/Nginx)
-- PHP 7.4 o superior
-- MySQL 5.7 o superior
+**Propósito**: Registro de accidentes laborales con información detallada del empleado, empresa y circunstancias del accidente.
+
+**Características principales**:
+- Cálculo automático de antigüedad basado en fecha de ingreso
+- Selección de partes del cuerpo afectadas mediante SVG interactivo
+- Generación automática de JSON con todos los datos del formulario
+- Validación de campos obligatorios
+
+**Campos principales**:
+- **Empresa**: CUIT, razón social, domicilio
+- **Empleado**: DNI, datos personales, puesto, área, antigüedad
+- **Accidente**: Tipo, agente causal, testigos, descripción
+- **Lesión**: Tipo, gravedad, partes afectadas, diagnóstico
+- **Médico**: Datos del médico tratante, matrícula
+
+### 2. Formulario de Control de Ausentismo (`form_control_ausentismo.php`)
+
+**Propósito**: Control y seguimiento de licencias médicas y ausentismo laboral.
+
+**Características principales**:
+- Cálculo automático de días de ausentismo
+- Cálculo automático de antigüedad
+- Determinación automática del día de la semana del inicio de certificado
+- Selección de partes del cuerpo afectadas
+- Generación automática de JSON
+
+**Campos principales**:
+- **Empresa y Empleado**: Datos básicos similares al formulario de accidente
+- **Licencia**: Tipo, agente causal, diagnóstico, tratamiento
+- **Certificado**: Fechas de inicio y vencimiento, días calculados
+- **Control**: Resultado del control médico, aptitud para reingreso
+- **ART**: Información de denuncia y seguimiento
+
+## Funcionalidades Técnicas
+
+### Cálculo Automático de Antigüedad
+
+Ambos formularios incluyen un sistema de cálculo automático de antigüedad que:
+
+- **Calcula** años y meses exactos desde la fecha de ingreso hasta la fecha actual
+- **Muestra** el resultado en formato legible (ej: "3 años, 8 meses")
+- **Incluye** en el JSON tanto el formato legible como los valores numéricos separados
+- **Actualiza** automáticamente cuando se cambia la fecha de ingreso
+
+```javascript
+// Ejemplo de cálculo
+antiguedad_calculada: "3 años, 8 meses"
+antiguedad_anios: 3
+antiguedad_meses: 8
+```
+
+### Selección de Partes del Cuerpo
+
+Sistema interactivo que permite:
+
+- **Seleccionar** partes del cuerpo en un SVG del cuerpo humano
+- **Visualizar** las partes seleccionadas con colores
+- **Incluir** las partes seleccionadas como array en el JSON
+- **Nombres legibles** para cada parte del cuerpo
+
+```javascript
+// Ejemplo de partes seleccionadas
+partes_afectadas: ["brazo_derecho", "mano_derecha"]
+```
+
+### Generación Automática de JSON
+
+Cada formulario genera automáticamente un JSON completo que incluye:
+
+- **Todos los campos** del formulario
+- **Cálculos automáticos** (antigüedad, días de ausentismo, etc.)
+- **Datos estructurados** para fácil procesamiento
+- **Timestamp** de registro
+- **Arrays** para datos múltiples (partes del cuerpo)
+
+### Cálculo de Días de Ausentismo
+
+El formulario de control de ausentismo incluye:
+
+- **Cálculo automático** de días entre fechas de certificado
+- **Determinación** del día de la semana del inicio
+- **Validación** de fechas
+- **Inclusión** en el JSON para procesamiento
+
+## Estructura de Datos JSON
+
+### Formulario de Accidente Laboral
+
+```json
+{
+  "cuit": "20-12345678-9",
+  "razon_social": "Empresa Ejemplo S.A.",
+  "domicilio_empresa": "Av. Corrientes 1234, CABA",
+  "dni": "12345678",
+  "nombre_apellido": "Juan Pérez",
+  "telefono": "011-1234-5678",
+  "celular": "11-1234-5678",
+  "domicilio_empleado": "Belgrano 567, CABA",
+  "puesto": "Operario",
+  "area": "Producción",
+  "fecha_ingreso": "2020-03-15",
+  "antiguedad": "3 años, 8 meses",
+  "antiguedad_calculada": "3 años, 8 meses",
+  "antiguedad_anios": 3,
+  "antiguedad_meses": 8,
+  "obra_social": "OSDE",
+  "plan": "310",
+  "nro_afiliado": "123456789",
+  "tipo_accidente": "Caída de altura",
+  "agente_causal": "Máquina",
+  "testigos": "María González, Carlos López",
+  "partes_afectadas": ["brazo_derecho", "mano_derecha"],
+  "descripcion": "Descripción detallada del accidente...",
+  "tipo_lesion": "Fractura",
+  "gravedad": "Moderado",
+  "derivacion": "ART",
+  "intervencion_art": "Si",
+  "dias_baja": 15,
+  "diagnostico": "Fractura de radio distal derecho",
+  "prox_ctrl": "2024-01-15",
+  "medico_inicial": "Dr. Roberto Martínez",
+  "matricula": "MP-12345",
+  "observaciones": "Observaciones adicionales...",
+  "fecha_registro": "2024-01-02T10:30:00.000Z"
+}
+```
+
+### Formulario de Control de Ausentismo
+
+```json
+{
+  "cuit": "20-98765432-1",
+  "razon_social": "Industrias Ejemplo S.A.",
+  "domicilio_empresa": "Rivadavia 987, CABA",
+  "dni": "87654321",
+  "nombre_apellido": "Ana Rodríguez",
+  "telefono": "011-9876-5432",
+  "celular": "11-9876-5432",
+  "domicilio_empleado": "San Martín 321, CABA",
+  "puesto": "Supervisor",
+  "area": "Calidad",
+  "fecha_ingreso": "2019-06-10",
+  "antiguedad": "4 años, 6 meses",
+  "antiguedad_calculada": "4 años, 6 meses",
+  "antiguedad_anios": 4,
+  "antiguedad_meses": 6,
+  "obra_social": "Swiss Medical",
+  "plan": "Premium",
+  "nro_afiliado": "987654321",
+  "tipo_licencia": "ART",
+  "agente_causal": "Herramienta",
+  "diagnostico": "Lumbalgia aguda por sobreesfuerzo",
+  "partes_afectadas": ["espalda_baja", "columna_lumbar"],
+  "tratamiento": "Reposo relativo, antiinflamatorios...",
+  "aseguradora_art": "Si",
+  "inicio_certificado": "2024-01-05",
+  "vto_certificado": "2024-01-20",
+  "dias_ausentismo": 16,
+  "dia_inicio_cert": "Viernes",
+  "med_tratante": "Dr. Carlos Fernández",
+  "matricula": "MP-54321",
+  "especialidad": "Traumatólogo",
+  "nro_denuncia_art": "ART-2024-001234",
+  "tipo_denuncia_art": "Accidente de trabajo",
+  "fecha_control": "2024-01-18",
+  "med_auditor": "Dr. Laura Morales",
+  "resultado": "Convalidado",
+  "requiere_reubicacion": "No",
+  "apto_reingreso": "2024-01-21",
+  "alta_reingreso": "2024-01-21",
+  "dias_ausentismo_control": 16,
+  "observaciones": "El paciente presenta buena evolución...",
+  "fecha_registro": "2024-01-18T14:45:00.000Z"
+}
+```
+
+## Tecnologías Utilizadas
+
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+), Bootstrap 5
+- **Backend**: PHP 7.4+
+- **Base de Datos**: MySQL/MariaDB
+- **Interactividad**: Vue.js (para selección de partes del cuerpo)
+- **Formato de Datos**: JSON
+- **Servidor Web**: Apache (XAMPP)
+
+## Instalación y Configuración
+
+### Requisitos Previos
+
+- XAMPP o servidor web con PHP 7.4+
+- MySQL/MariaDB
 - Navegador web moderno
 
-### **Configuración de Base de Datos**
+### Pasos de Instalación
 
-Cada formulario maneja su propia configuración de base de datos. Modifica las credenciales en cada archivo:
+1. **Clonar/Descargar** el proyecto en la carpeta `htdocs` de XAMPP
+2. **Configurar** la base de datos en `conexion.php`
+3. **Acceder** a `http://localhost/clinica_san_gabriel/`
+4. **Verificar** que todos los archivos estén en su lugar
 
-#### **Para Accidentes Laborales** (`form_accidente_laboral.php`):
+### Configuración de Base de Datos
+
+Editar `conexion.php` con los datos de conexión:
+
 ```php
+<?php
 $host = 'localhost';
-$dbname = 'accidentes_laborales';
-$username = 'tu_usuario';
-$password = 'tu_contraseña';
+$usuario = 'tu_usuario';
+$password = 'tu_password';
+$base_datos = 'clinica_san_gabriel';
+?>
 ```
 
-#### **Para Control de Ausentismo** (`form_control_ausentismo.php`):
-```php
-$host = 'localhost';
-$dbname = 'control_ausentismo';
-$username = 'tu_usuario';
-$password = 'tu_contraseña';
-```
+## Uso del Sistema
 
-### **Instalación**
-1. Clona o descarga el proyecto en tu servidor web
-2. Configura las credenciales de base de datos
-3. Crea las tablas necesarias según las estructuras en `estructura_json.json`
-4. Accede a `index.php` desde tu navegador
+### Formulario de Accidente Laboral
 
----
+1. **Acceder** a `form_accidente_laboral.php`
+2. **Completar** los datos de empresa y empleado
+3. **Seleccionar** fecha de ingreso (se calcula automáticamente la antigüedad)
+4. **Completar** información del accidente
+5. **Seleccionar** partes del cuerpo afectadas en el SVG
+6. **Agregar** descripción y datos médicos
+7. **Enviar** el formulario (se genera JSON automáticamente)
 
-## 📝 **Uso del Sistema**
+### Formulario de Control de Ausentismo
 
-### **Registro de Accidente Laboral**
-1. Accede al formulario desde la página principal
-2. Completa datos de la empresa (CUIT, razón social, domicilio)
-3. Ingresa información del empleado (DNI, nombre, contacto)
-4. Especifica detalles laborales (puesto, área, antigüedad)
-5. Registra datos del accidente (tipo, fecha, descripción)
-6. Selecciona partes del cuerpo afectadas usando el selector visual
-7. Completa información médica (diagnóstico, tratamiento, gravedad)
-8. Haz clic en **"Guardar"** para registrar
+1. **Acceder** a `form_control_ausentismo.php`
+2. **Completar** datos básicos de empresa y empleado
+3. **Ingresar** información de la licencia
+4. **Seleccionar** fechas de certificado (se calculan días automáticamente)
+5. **Completar** datos del control médico
+6. **Enviar** el formulario (se genera JSON automáticamente)
 
-### **Control de Ausentismo**
-1. Accede al formulario correspondiente
-2. Completa datos de empresa y empleado
-3. Especifica tipo de licencia (Justificada, Injustificada, ART)
-4. Ingresa fechas de certificado médico
-5. El sistema calcula automáticamente días de ausentismo
-6. Registra información médica y de auditoría
-7. Controla aptitudes para reingreso
-8. Guarda el registro
+## Características Técnicas Avanzadas
 
-### **Selector de Partes del Cuerpo**
-- **Click simple**: Selecciona/deselecciona una parte
-- **Múltiple selección**: Mantén seleccionadas varias partes
-- **Categorías**: Las partes se agrupan por región anatómica
-- **Visual**: El SVG se actualiza mostrando las partes seleccionadas
+### Validación de Formularios
 
----
+- **Validación del lado cliente** con JavaScript
+- **Campos obligatorios** marcados visualmente
+- **Validación de fechas** y formatos
+- **Prevención de envío** con datos incompletos
 
-## 🔒 **Características de Seguridad**
+### Responsive Design
 
-- ✅ **Validación de campos obligatorios** en cliente y servidor
-- ✅ **Sanitización de datos** antes del almacenamiento
-- ✅ **Uso de PDO** para prevenir inyecciones SQL
-- ✅ **Validación de tipos de datos** en formularios
-- ✅ **Manejo de errores** controlado
+- **Diseño adaptable** para dispositivos móviles
+- **Bootstrap 5** para layout responsive
+- **Componentes** que se adaptan a diferentes tamaños de pantalla
 
----
+### Interactividad SVG
 
-## 📊 **Campos del Sistema**
+- **Selección visual** de partes del cuerpo
+- **Feedback visual** inmediato
+- **Datos estructurados** en formato array
+- **Nombres legibles** para cada parte
 
-### **Accidentes Laborales**
-| Campo | Tipo | Obligatorio | Descripción |
-|-------|------|-------------|-------------|
-| CUIT | String | ✅ | Identificación fiscal de la empresa |
-| DNI | String | ✅ | Documento del empleado |
-| Tipo Accidente | Select | ✅ | Clasificación del accidente |
-| Partes Afectadas | Array | ❌ | Partes del cuerpo involucradas |
-| Gravedad | Select | ❌ | Leve, Moderada, Grave |
-| Fecha Accidente | DateTime | ❌ | Momento del incidente |
+### Cálculos Automáticos
 
-### **Control de Ausentismo**
-| Campo | Tipo | Obligatorio | Descripción |
-|-------|------|-------------|-------------|
-| CUIT | String | ✅ | Identificación fiscal de la empresa |
-| DNI | String | ✅ | Documento del empleado |
-| Tipo Licencia | Select | ✅ | Justificada, Injustificada, ART |
-| Inicio Certificado | Date | ❌ | Fecha de inicio de licencia |
-| Vencimiento | Date | ❌ | Fecha de fin de licencia |
-| Días Ausentismo | Number | ❌ | Calculado automáticamente |
+- **Antigüedad** en años y meses
+- **Días de ausentismo** entre fechas
+- **Día de la semana** del inicio de certificado
+- **Validación** de fechas lógicas
+
+## Mantenimiento y Desarrollo
+
+### Estructura Modular
+
+- **Componentes reutilizables** (header, footer, partes_cuerpo)
+- **Separación** de lógica y presentación
+- **Archivos** organizados por funcionalidad
+
+### Extensibilidad
+
+- **Fácil agregado** de nuevos campos
+- **Sistema modular** para nuevos formularios
+- **JSON estructurado** para integración con otros sistemas
+
+### Logs y Depuración
+
+- **Console.log** para verificar datos
+- **Validación** de JSON generado
+- **Mensajes** de error descriptivos
+
+## Contacto y Soporte
+
+Para consultas técnicas o soporte, contactar al equipo de desarrollo de la Clínica San Gabriel.
 
 ---
 
-## 🔧 **Personalización**
-
-### **Agregar Nuevos Tipos de Accidente**
-Modifica el select en `form_accidente_laboral.php`:
-```html
-<option value="Nuevo_Tipo">Nuevo Tipo de Accidente</option>
-```
-
-### **Modificar Partes del Cuerpo**
-Edita el componente Vue.js en `partes_cuerpo.php` agregando nuevas partes al array correspondiente.
-
-### **Cambiar Estilos**
-El sistema usa Bootstrap 5.3.0. Puedes:
-- Modificar las clases CSS existentes
-- Agregar CSS personalizado en `header.php`
-- Cambiar el tema de Bootstrap
-
----
-
-## 📋 **API y Integración**
-
-### **Estructura de Datos JSON**
-El archivo `estructura_json.json` contiene las estructuras completas de datos para:
-- ✅ **Accidentes laborales** con todos los campos y validaciones
-- ✅ **Control de ausentismo** con formato completo
-- ✅ **Catálogo de partes del cuerpo** organizadas por grupos
-- ✅ **Ejemplos de uso** con datos reales
-- ✅ **Formatos de fecha** y tipos de datos
-
-Esta estructura permite la integración con sistemas externos o el desarrollo de APIs RESTful.
-
----
-
-## 🛠️ **Mantenimiento**
-
-### **Backup de Datos**
-- Realiza backups regulares de las bases de datos
-- Respalda los archivos de configuración
-- Mantén copias de seguridad del código personalizado
-
-### **Actualizaciones**
-- Revisa regularmente las dependencias (Bootstrap, Vue.js)
-- Actualiza PHP y MySQL según sea necesario
-- Mantén el navegador compatible con las tecnologías web modernas
-
-### **Monitoreo**
-- Verifica el funcionamiento de los formularios
-- Revisa los logs de errores del servidor
-- Controla el rendimiento de las consultas SQL
-
----
-
-## 📞 **Soporte y Contacto**
-
-Para soporte técnico o consultas sobre el sistema:
-
-- 📧 **Email**: soporte@clinicasangabriel.com
-- 📱 **Teléfono**: +54 (264) 123-4567
-- 🌐 **Web**: www.clinicasangabriel.com
-- 📍 **Dirección**: San Juan, Argentina
-
----
-
-## 📜 **Licencia**
-
-Este sistema fue desarrollado específicamente para **Clínica San Gabriel**. 
-
-### Derechos de Uso:
-- ✅ Uso interno de la clínica
-- ✅ Modificaciones para necesidades específicas
-- ✅ Backup y distribución interna
-- ❌ Redistribución comercial sin autorización
-- ❌ Uso en otras instituciones sin licencia
-
----
-
-## 🚀 **Versión Actual: 2.0**
-
-### **Changelog**
-- **v2.0**: Sistema simplificado con formularios PHP tradicionales
-- **v1.5**: Integración de selector de partes del cuerpo con Vue.js
-- **v1.0**: Versión inicial con formularios básicos
-
-### **Próximas Mejoras**
-- 📊 Dashboard de estadísticas
-- 📈 Reportes avanzados en PDF
-- 🔍 Sistema de búsqueda y filtros
-- 📱 Versión móvil optimizada
-- 🔔 Notificaciones automáticas
-
----
-
-**Desarrollado con ❤️ para Clínica San Gabriel - Sistema de Gestión Médica Laboral**
+**Versión**: 1.0  
+**Última actualización**: Enero 2024  
+**Desarrollado para**: Clínica San Gabriel 

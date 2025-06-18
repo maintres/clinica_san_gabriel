@@ -27,19 +27,19 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="razon_social" class="form-label">Razón Social:</label>
-                            <input type="text" class="form-control" id="razon_social" name="razon_social" disabled>
+                            <p id="razon_social" class="form-control-plaintext"></p>
+                            <input type="hidden" name="razon_social">
                         </div>
                     </div>
 
                     <div class="row mb-3">                        
                         <div class="col-md-6">
                             <label for="domicilio_empresa" class="form-label">Domicilio:</label>
-                            <input type="text" class="form-control" id="domicilio_empresa" name="domicilio_empresa" disabled>
+                            <p id="domicilio_empresa" class="form-control-plaintext"></p>
+                            <input type="hidden" name="domicilio_empresa">
                         </div>
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-warning mt-4" id="btnModificarEmpresa">
-                                <i class="fas fa-edit me-1"></i>Modificar
-                            </button>
+                            
                         </div>
                     </div>
 
@@ -65,27 +65,29 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="nombre_apellido" class="form-label">Nombre y Apellido</label>
-                            <input type="text" class="form-control" id="nombre_apellido" name="nombre_apellido" disabled>
+                            <p id="nombre_apellido" class="form-control-plaintext"></p>
+                            <input type="hidden" name="nombre_apellido">
                         </div>
                         <div class="col-md-3">
                             <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" id="telefono" name="telefono" disabled>
+                            <p id="telefono" class="form-control-plaintext"></p>
+                            <input type="hidden" name="telefono">
                         </div>
                         <div class="col-md-3">
                             <label for="celular" class="form-label">Celular</label>
-                            <input type="tel" class="form-control" id="celular" name="celular" disabled>
+                            <p id="celular" class="form-control-plaintext"></p>
+                            <input type="hidden" name="celular">
                         </div>
                     </div>
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="domicilio_empleado" class="form-label">Domicilio</label>
-                            <input type="text" class="form-control" id="domicilio_empleado" name="domicilio_empleado" disabled>
+                            <p id="domicilio_empleado" class="form-control-plaintext"></p>
+                            <input type="hidden" name="domicilio_empleado">
                         </div>
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-warning mt-4" id="btnModificarEmpleado">
-                                <i class="fas fa-edit me-1"></i>Modificar
-                            </button>
+                            
                         </div> 
                     </div>
 
@@ -105,8 +107,8 @@
                             <input type="date" class="form-control" id="fecha_ingreso" name="fecha_ingreso" >
                         </div>
                         <div class="col-md-3">
-                            <label for="antiguedad" class="form-label">Antigüedad (años)</label>
-                            <input type="text" class="form-control" id="antiguedad" name="antiguedad">
+                            <label for="antiguedad" class="form-label">Antigüedad</label>
+                            <input type="text" class="form-control" id="antiguedad" name="antiguedad" disabled>
                         </div>
                     </div>
 
@@ -116,7 +118,9 @@
                         <div class="col-md-4">
                             <label for="obra_social" class="form-label">Obra Social</label>
                             <select class="form-select" id="obra_social" name="obra_social">
-                                <option value="OSDE" selected>OSDE</option>
+                                <option value="" selected disabled>-- Seleccionar --</option>
+                                <option value="Ninguna" >Ninguna</option>
+                                <option value="OSDE">OSDE</option>
                                 <option value="Swiss Medical">Swiss Medical</option>
                                 <option value="IOMA">IOMA</option>
                                 <option value="Otra">Otra</option>
@@ -186,11 +190,11 @@
                             <label class="form-label">Aseguradora - ART:</label>
                             <div class="mt-2">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="aseguradora_art" id="art_si" value="Si" checked>
+                                    <input class="form-check-input" type="radio" name="aseguradora_art" id="art_si" value="Si" >
                                     <label class="form-check-label" for="art_si">Sí</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="aseguradora_art" id="art_no" value="No">
+                                    <input class="form-check-input" type="radio" name="aseguradora_art" id="art_no" value="No" checked>
                                     <label class="form-check-label" for="art_no">No</label>
                                 </div>
                             </div>
@@ -259,7 +263,8 @@
                         <div class="col-md-4">
                             <label for="especialidad" class="form-label">Especialidad:</label>
                             <select class="form-select" id="especialidad" name="especialidad">
-                                <option value="Cardiólogo" selected>Cardiólogo</option>
+                                <option value="" selected disabled>-- Seleccionar --</option>
+                                <option value="Cardiólogo" >Cardiólogo</option>
                                 <option value="Clínico">Clínico</option>
                                 <option value="Traumatólogo">Traumatólogo</option>
                                 <option value="Neurólogo">Neurólogo</option>
@@ -303,7 +308,8 @@
                         <div class="col-md-4">
                             <label for="resultado" class="form-label">Resultado:</label>
                             <select class="form-select" id="resultado" name="resultado">
-                                <option value="Convalidado" selected>Convalidado</option>
+                                <option value="" selected disabled>-- Seleccionar --</option>
+                                <option value="Convalidado">Convalidado</option>
                                 <option value="Rechazado">Rechazado</option>
                                 <option value="Requiere">Requiere</option>
                             </select>
@@ -333,8 +339,8 @@
                             <input type="date" class="form-control" id="alta_reingreso" name="alta_reingreso">
                         </div>
                         <div class="col-md-3">
-                            <label for="dias_ausentismo_final" class="form-label">Días ausentismo:</label>
-                            <input type="number" class="form-control" id="dias_ausentismo_final" name="dias_ausentismo_final">
+                            <label for="dias_ausentismo_control" class="form-label">Días ausentismo:</label>
+                            <input type="number" class="form-control" id="dias_ausentismo_control" name="dias_ausentismo_control">
                         </div>
                     </div>
                     
@@ -367,7 +373,7 @@
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
                 
                 document.querySelector('[for="dias_ausentismo"] + .form-control-plaintext').textContent = diffDays + ' días';
-                document.getElementById('dias_ausentismo_final').value = diffDays;
+                document.getElementById('dias_ausentismo_control').value = diffDays;
             }
         }
 
@@ -381,59 +387,6 @@
             }
         }
 
-        // Funciones para habilitar/deshabilitar campos
-        function toggleEmpresaFields() {
-            const razonSocial = document.getElementById('razon_social');
-            const domicilioEmpresa = document.getElementById('domicilio_empresa');
-            const btn = document.getElementById('btnModificarEmpresa');
-            
-            if (razonSocial.disabled) {
-                razonSocial.disabled = false;
-                domicilioEmpresa.disabled = false;
-                btn.innerHTML = '<i class="fas fa-save me-1"></i>Guardar';
-                btn.classList.remove('btn-warning');
-                btn.classList.add('btn-success');
-            } else {
-                razonSocial.disabled = true;
-                domicilioEmpresa.disabled = true;
-                btn.innerHTML = '<i class="fas fa-edit me-1"></i>Modificar';
-                btn.classList.remove('btn-success');
-                btn.classList.add('btn-warning');
-                alert('Datos de empresa guardados');
-            }
-        }
-
-        function toggleEmpleadoFields() {
-            const nombreApellido = document.getElementById('nombre_apellido');
-            const domicilioEmpleado = document.getElementById('domicilio_empleado');
-            const telefono = document.getElementById('telefono');
-            const celular = document.getElementById('celular');
-            const btn = document.getElementById('btnModificarEmpleado');
-            
-            if (nombreApellido.disabled) {
-                nombreApellido.disabled = false;
-                domicilioEmpleado.disabled = false;
-                telefono.disabled = false;
-                celular.disabled = false;
-                btn.innerHTML = '<i class="fas fa-save me-1"></i>Guardar';
-                btn.classList.remove('btn-warning');
-                btn.classList.add('btn-success');
-            } else {
-                nombreApellido.disabled = true;
-                domicilioEmpleado.disabled = true;
-                telefono.disabled = true;
-                celular.disabled = true;
-                btn.innerHTML = '<i class="fas fa-edit me-1"></i>Modificar';
-                btn.classList.remove('btn-success');
-                btn.classList.add('btn-warning');
-                alert('Datos de empleado guardados');
-            }
-        }
-
-        // Event listeners
-        document.getElementById('btnModificarEmpresa').addEventListener('click', toggleEmpresaFields);
-        document.getElementById('btnModificarEmpleado').addEventListener('click', toggleEmpleadoFields);
-        
         document.getElementById('inicio_certificado').addEventListener('change', function() {
             calcularDiasAusentismo();
             calcularDiaInicio();
@@ -442,120 +395,180 @@
         document.getElementById('vto_certificado').addEventListener('change', calcularDiasAusentismo);
         
         // Cálculo automático de antigüedad
-        document.getElementById('fecha_ingreso').addEventListener('change', function() {
-            const fechaIngreso = new Date(this.value);
-            const fechaActual = new Date();
-            const diffTime = fechaActual - fechaIngreso;
-            const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
-            document.getElementById('antiguedad').value = diffYears + ' años';
-        });
-
-        // Validación del formulario
-        document.getElementById('ausentismoForm').addEventListener('submit', function(e) {
-            const requiredFields = document.querySelectorAll('.required-field');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    field.classList.remove('is-invalid');
+        function calcularAntiguedad() {
+            const fechaIngreso = document.getElementById('fecha_ingreso').value;
+            if (fechaIngreso) {
+                const fechaIngresoDate = new Date(fechaIngreso);
+                const fechaActual = new Date();
+                
+                // Calcular diferencia en años con precisión
+                let años = fechaActual.getFullYear() - fechaIngresoDate.getFullYear();
+                const mesActual = fechaActual.getMonth();
+                const mesIngreso = fechaIngresoDate.getMonth();
+                
+                // Ajustar si aún no ha cumplido años en el año actual
+                if (mesActual < mesIngreso || (mesActual === mesIngreso && fechaActual.getDate() < fechaIngresoDate.getDate())) {
+                    años--;
                 }
-            });
-            
-            if (!isValid) {
-                e.preventDefault();
-                alert('Por favor complete todos los campos obligatorios');
+                
+                // Calcular meses adicionales
+                let meses = mesActual - mesIngreso;
+                if (meses < 0) {
+                    meses += 12;
+                }
+                
+                // Formatear el resultado solo con años y meses
+                let resultado = '';
+                if (años > 0) {
+                    resultado += años + ' año' + (años > 1 ? 's' : '');
+                }
+                if (meses > 0) {
+                    if (resultado) resultado += ', ';
+                    resultado += meses + ' mes' + (meses > 1 ? 'es' : '');
+                }
+                
+                if (!resultado) {
+                    resultado = 'Menos de 1 mes';
+                }
+                
+                document.getElementById('antiguedad').value = resultado;
             }
-        });
+        }
 
+        document.getElementById('fecha_ingreso').addEventListener('change', calcularAntiguedad);
+
+        // Función para obtener el JSON desde el formulario
+        function obtenerJsonDesdeFormulario() {
+            const form = document.getElementById('ausentismoForm');
+            const formData = new FormData(form);
+            const jsonData = {};
+
+            // Recorrer todos los campos del formulario
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            // Obtener los campos que están en <p> y sincronizarlos con los <input type="hidden">
+            const camposTexto = [
+                'razon_social',
+                'domicilio_empresa',
+                'nombre_apellido',
+                'telefono',
+                'celular',
+                'domicilio_empleado'
+            ];
+            camposTexto.forEach(id => {
+                const valor = document.getElementById(id).textContent.trim();
+                jsonData[id] = valor;
+            });
+
+            // Calcular días de ausentismo
+            const fechaInicio = document.getElementById('inicio_certificado').value;
+            const fechaVto = document.getElementById('vto_certificado').value;
+            
+            if (fechaInicio && fechaVto) {
+                const inicio = new Date(fechaInicio);
+                const vto = new Date(fechaVto);
+                const diffTime = vto - inicio;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                jsonData.dias_ausentismo = diffDays;
+            } else {
+                jsonData.dias_ausentismo = 0;
+            }
+
+            // Calcular día de la semana del inicio
+            if (fechaInicio) {
+                const fecha = new Date(fechaInicio);
+                const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                jsonData.dia_inicio_cert = dias[fecha.getDay()];
+            } else {
+                jsonData.dia_inicio_cert = '';
+            }
+
+            // Calcular antigüedad
+            const fechaIngreso = document.getElementById('fecha_ingreso').value;
+            if (fechaIngreso) {
+                const fechaIngresoDate = new Date(fechaIngreso);
+                const fechaActual = new Date();
+                
+                // Calcular diferencia en años con precisión
+                let años = fechaActual.getFullYear() - fechaIngresoDate.getFullYear();
+                const mesActual = fechaActual.getMonth();
+                const mesIngreso = fechaIngresoDate.getMonth();
+                
+                // Ajustar si aún no ha cumplido años en el año actual
+                if (mesActual < mesIngreso || (mesActual === mesIngreso && fechaActual.getDate() < fechaIngresoDate.getDate())) {
+                    años--;
+                }
+                
+                // Calcular meses adicionales
+                let meses = mesActual - mesIngreso;
+                if (meses < 0) {
+                    meses += 12;
+                }
+                
+                // Formatear el resultado solo con años y meses
+                let resultado = '';
+                if (años > 0) {
+                    resultado += años + ' año' + (años > 1 ? 's' : '');
+                }
+                if (meses > 0) {
+                    if (resultado) resultado += ', ';
+                    resultado += meses + ' mes' + (meses > 1 ? 'es' : '');
+                }
+                
+                if (!resultado) {
+                    resultado = 'Menos de 1 mes';
+                }
+                
+                jsonData.antiguedad_calculada = resultado;
+                jsonData.antiguedad_anios = años;
+                jsonData.antiguedad_meses = meses;
+            } else {
+                jsonData.antiguedad_calculada = '';
+                jsonData.antiguedad_anios = 0;
+                jsonData.antiguedad_meses = 0;
+            }
+
+            // Obtener el array de partes seleccionadas desde Vue
+            if (window.vueApp && Array.isArray(window.vueApp.selectedParts)) {
+                jsonData.partes_afectadas = window.vueApp.selectedParts;
+            } else {
+                jsonData.partes_afectadas = [];
+            }
+
+            jsonData.fecha_registro = new Date().toISOString();
+
+            return jsonData;
+        }
+
+        // Envío del formulario usando el JSON generado
+        document.getElementById('ausentismoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const jsonData = obtenerJsonDesdeFormulario();
+            console.log(JSON.stringify(jsonData, null, 2));
+            fetch('/ausentismo/registrar_ausencia', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Control de ausentismo registrado correctamente');
+            })
+            .catch(error => {
+                alert('Error al registrar el control de ausentismo: ' + error.message);
+            });
+        });
 
     </script>
 
-    <?php
-    // Procesamiento PHP del formulario
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Configuración de base de datos
-        $host = 'localhost';
-        $dbname = 'control_ausentismo';
-        $username = 'usuario';
-        $password = 'contraseña';
-        
-        try {
-            $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-            // Preparar consulta SQL
-            $sql = "INSERT INTO control_ausentismo (
-                cuit, razon_social, domicilio_empresa, dni, nombre_apellido, 
-                domicilio_empleado, telefono, celular, puesto, area, 
-                fecha_ingreso, antiguedad, obra_social, plan, nro_afiliado,
-                tipo_licencia, agente_causal, diagnostico, tratamiento,
-                aseguradora_art, inicio_certificado, vto_certificado, dias_ausentismo,
-                dia_inicio_cert, med_tratante, matricula, especialidad,
-                nro_denuncia_art, tipo_denuncia_art, fecha_control, med_auditor,
-                resultado, requiere_reubicacion, apto_reingreso, alta_reingreso,
-                dias_ausentismo_final, observaciones, fecha_registro
-            ) VALUES (
-                :cuit, :razon_social, :domicilio_empresa, :dni, :nombre_apellido,
-                :domicilio_empleado, :telefono, :celular, :puesto, :area,
-                :fecha_ingreso, :antiguedad, :obra_social, :plan, :nro_afiliado,
-                :tipo_licencia, :agente_causal, :diagnostico, :tratamiento,
-                :aseguradora_art, :inicio_certificado, :vto_certificado, :dias_ausentismo,
-                :dia_inicio_cert, :med_tratante, :matricula, :especialidad,
-                :nro_denuncia_art, :tipo_denuncia_art, :fecha_control, :med_auditor,
-                :resultado, :requiere_reubicacion, :apto_reingreso, :alta_reingreso,
-                :dias_ausentismo_final, :observaciones, NOW()
-            )";
-            
-            $stmt = $pdo->prepare($sql);
-            
-            // Ejecutar consulta con los datos del formulario
-            $stmt->execute([
-                ':cuit' => $_POST['cuit'],
-                ':razon_social' => $_POST['razon_social'] ?? '',
-                ':domicilio_empresa' => $_POST['domicilio_empresa'] ?? '',
-                ':dni' => $_POST['dni'],
-                ':nombre_apellido' => $_POST['nombre_apellido'] ?? '',
-                ':domicilio_empleado' => $_POST['domicilio_empleado'] ?? '',
-                ':telefono' => $_POST['telefono'] ?? '',
-                ':celular' => $_POST['celular'] ?? '',
-                ':puesto' => $_POST['puesto'],
-                ':area' => $_POST['area'],
-                ':fecha_ingreso' => $_POST['fecha_ingreso'],
-                ':antiguedad' => $_POST['antiguedad'] ?? '',
-                ':obra_social' => $_POST['obra_social'],
-                ':plan' => $_POST['plan'],
-                ':nro_afiliado' => $_POST['nro_afiliado'],
-                ':tipo_licencia' => $_POST['tipo_licencia'],
-                ':agente_causal' => $_POST['agente_causal'],
-                ':diagnostico' => $_POST['diagnostico'],
-                ':tratamiento' => $_POST['tratamiento'],
-                ':aseguradora_art' => $_POST['aseguradora_art'],
-                ':inicio_certificado' => $_POST['inicio_certificado'],
-                ':vto_certificado' => $_POST['vto_certificado'],
-                ':dias_ausentismo' => $_POST['dias_ausentismo'] ?? '',
-                ':dia_inicio_cert' => $_POST['dia_inicio_cert'] ?? '',
-                ':med_tratante' => $_POST['med_tratante'],
-                ':matricula' => $_POST['matricula'],
-                ':especialidad' => $_POST['especialidad'],
-                ':nro_denuncia_art' => $_POST['nro_denuncia_art'],
-                ':tipo_denuncia_art' => $_POST['tipo_denuncia_art'],
-                ':fecha_control' => $_POST['fecha_control'],
-                ':med_auditor' => $_POST['med_auditor'],
-                ':resultado' => $_POST['resultado'],
-                ':requiere_reubicacion' => $_POST['requiere_reubicacion'],
-                ':apto_reingreso' => $_POST['apto_reingreso'],
-                ':alta_reingreso' => $_POST['alta_reingreso'],
-                ':dias_ausentismo_final' => $_POST['dias_ausentismo_final'],
-                ':observaciones' => $_POST['observaciones']
-            ]);
-            
-            echo "<script>alert('Control de ausentismo registrado correctamente');</script>";
-            
-        } catch(PDOException $e) {
-            echo "<script>alert('Error al guardar: " . $e->getMessage() . "');</script>";
-        }
-    }
-    ?>
+    <?php include 'footer.php'; ?>

@@ -55,7 +55,6 @@
                             <i class="fas fa-hand-pointer me-2"></i>
                             Seleccionar Partes del Cuerpo Afectadas
                         </h6>
-                        <small class="text-muted">Haga clic en las partes del cuerpo para seleccionarlas</small>
                     </div>
                 </div>
             </div>
@@ -125,7 +124,8 @@
             part_clicked(event) {
                 const clickedElement = event.target;
                 if (clickedElement.tagName === 'path' && clickedElement.id) {
-                    const partName = clickedElement.id.replace(/-/g, ' ');
+                    // Usar el atributo data-parte si existe, si no, usar el id con espacios
+                    const partName = clickedElement.getAttribute('data-parte') || clickedElement.id.replace(/-/g, ' ');
                     
                     // Verificar si la parte ya está seleccionada
                     const partIndex = this.selectedParts.indexOf(partName);
@@ -136,7 +136,6 @@
                         this.selectedElements.push(clickedElement);
                         clickedElement.classList.add('selected');
                         
-                        console.log('Parte agregada:', partName);
                     } else {
                         // Quitar parte si ya está seleccionada
                         this.selectedParts.splice(partIndex, 1);
@@ -146,7 +145,6 @@
                         console.log('Parte removida:', partName);
                     }
                     
-                    console.log('Partes seleccionadas:', this.selectedParts);
                 }
             },
             
@@ -178,8 +176,23 @@
                 this.selectedParts = [];
                 this.selectedElements = [];
                 
-                console.log('Todas las partes han sido removidas');
             }
         }
     });
+
+    document.querySelectorAll('#cuerpo-humano path').forEach(function(path) {
+        path.addEventListener('click', function() {
+            path.classList.toggle('selected');
+            // Opcional: cambia el color al seleccionar
+            if (path.classList.contains('selected')) {
+                path.style.fill = '#ff9800'; // Naranja al seleccionar
+            } else {
+                path.style.fill = '#ccc'; // Color original al deseleccionar
+            }
+        });
+    });
+
+    const partesSeleccionadas = document.querySelectorAll('#cuerpo-humano path.selected');
+    const partesAfectadas = Array.from(partesSeleccionadas).map(el => el.getAttribute('data-parte')).join(',');
+    jsonData.partes_afectadas = partesAfectadas;
 </script>
