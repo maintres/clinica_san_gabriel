@@ -15,9 +15,12 @@
                     <div class="row mb-3">
                         <div class="col-md-5">
                             <div class="input-group">
-                                <label class="input-group-text" for="cuit">CUIT</label>
-                                <input type="text" class="form-control" id="cuit" name="cuit">
-                                <button type="button" class="btn btn-primary">
+                                <label class="input-group-text" for="razon_social_buscar">Razón Social</label>
+                                <input type="text" class="form-control" id="razon_social_buscar" name="razon_social_buscar" placeholder="Ingrese razón social" list="empresas-list" autocomplete="off">
+                                <datalist id="empresas-list">
+                                    <!-- Las opciones se cargarán dinámicamente -->
+                                </datalist>
+                                <button type="button" class="btn btn-primary" id="btnBuscarEmpresa">
                                     <i class="fas fa-search me-1"></i>Buscar
                                 </button>
                             </div>
@@ -27,7 +30,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="razon_social" class="form-label">Razón Social:</label>
-                            <p id="razon_social" class="form-control-plaintext"></p>
+                            <p id="razon_social" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="razon_social">
                         </div>
                     </div>
@@ -35,13 +38,16 @@
                     <div class="row mb-3">                        
                         <div class="col-md-6">
                             <label for="domicilio_empresa" class="form-label">Domicilio:</label>
-                            <p id="domicilio_empresa" class="form-control-plaintext"></p>
+                            <p id="domicilio_empresa" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="domicilio_empresa">
                         </div>
                         <div class="col-md-6">
                             
                         </div>
                     </div>
+
+                    <!-- Campo hidden para el ID de la empresa -->
+                    <input type="hidden" id="empresa_id_hidden" name="empresa_id" value="">
 
                     <hr class="my-4">
                     
@@ -55,7 +61,7 @@
                             <div class="input-group">
                                 <label class="input-group-text" for="dni">DNI</label>
                                 <input type="text" class="form-control" id="dni" name="dni">
-                                <button type="button" class="btn btn-primary">
+                                <button type="button" class="btn btn-primary" id="btnBuscarEmpleado">
                                     <i class="fas fa-search me-1"></i>Buscar
                                 </button>
                             </div>
@@ -65,17 +71,21 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="nombre_apellido" class="form-label">Nombre y Apellido</label>
-                            <p id="nombre_apellido" class="form-control-plaintext"></p>
-                            <input type="hidden" name="nombre_apellido">
+                            <div class="d-flex">
+                                <p id="nombre" class="me-2 fw-bold"></p>
+                                <p id="apellido" class="fw-bold"></p>
+                            </div>
+                            <input type="hidden" name="nombre">
+                            <input type="hidden" name="apellido">
                         </div>
                         <div class="col-md-3">
                             <label for="telefono" class="form-label">Teléfono</label>
-                            <p id="telefono" class="form-control-plaintext"></p>
+                            <p id="telefono" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="telefono">
                         </div>
                         <div class="col-md-3">
                             <label for="celular" class="form-label">Celular</label>
-                            <p id="celular" class="form-control-plaintext"></p>
+                            <p id="celular" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="celular">
                         </div>
                     </div>
@@ -83,13 +93,16 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="domicilio_empleado" class="form-label">Domicilio</label>
-                            <p id="domicilio_empleado" class="form-control-plaintext"></p>
+                            <p id="domicilio_empleado" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="domicilio_empleado">
                         </div>
                         <div class="col-md-6">
                             
                         </div> 
                     </div>
+
+                    <!-- Campo hidden para el ID del paciente -->
+                    <input type="hidden" id="paciente_id_hidden" name="paciente_id" value="">
 
                     <hr class="my-4">
 
@@ -201,6 +214,8 @@
                         </div>
                     </div>
                     
+                    
+                    
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label for="inicio_certificado" class="form-label">Inicio certificado: <strong id="inicio_texto"></strong></label>
@@ -223,6 +238,8 @@
                             <label for="dia_inicio_cert" class="form-label">Día inicio certificado: <strong id="dia_inicio_cert"></strong></label>
                         </div>
                     </div>
+                    <label for="inicio_certificado" class="form-label">Dia de presentacion de certificado: <strong id="inicio_texto"></strong></label>
+                    fecha hoy- fecha de inicio certificado
                     <!-- funcion para calcular los dias de ausentismo -->
                     <script>
                     function calcularDias() {
@@ -331,7 +348,7 @@
                     
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label for="apto_reingreso" class="form-label">Apto al reingreso:</label>
+                            <label for="apto_reingreso" class="form-label">proximo al reingreso:</label>
                             <input type="date" class="form-control" id="apto_reingreso" name="apto_reingreso">
                         </div>
                         <div class="col-md-3">
@@ -360,7 +377,46 @@
         </div>
     </div>
 
+    <!-- Incluir el archivo JS de búsquedas -->
+    <script src="busqueda_api.js"></script>
+    
+    <!-- Incluir SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Incluir funciones de alerta -->
+    <script src="alertas.js"></script>
+
     <script>
+        // Configuración para el formulario de control de ausentismo
+        const configAusentismo = {
+            empresas: {
+                inputId: 'razon_social_buscar',
+                btnId: 'btnBuscarEmpresa',
+                empresaIdField: 'empresa_id_hidden',
+                campos: [
+                    { id: 'razon_social', apiField: 'razonsocial' },
+                    { id: 'domicilio_empresa', apiField: 'domicilio' }
+                ]
+            },
+            empleados: {
+                dniId: 'dni',
+                btnId: 'btnBuscarEmpleado',
+                pacienteIdField: 'paciente_id_hidden',
+                campos: [
+                    { id: 'nombre', apiField: 'nombres' },
+                    { id: 'apellido', apiField: 'apellidos' },
+                    { id: 'telefono', apiField: 'telefono' },
+                    { id: 'celular', apiField: 'celular' },
+                    { id: 'domicilio_empleado', apiField: 'domicilio' }
+                ]
+            }
+        };
+
+        // Inicializar las búsquedas cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            busquedaAPI.inicializarBusquedas(configAusentismo);
+        });
+
         // Cálculo automático de días de ausentismo
         function calcularDiasAusentismo() {
             const fechaInicio = document.getElementById('inicio_certificado').value;
@@ -445,21 +501,10 @@
 
             // Recorrer todos los campos del formulario
             formData.forEach((value, key) => {
-                jsonData[key] = value;
-            });
-
-            // Obtener los campos que están en <p> y sincronizarlos con los <input type="hidden">
-            const camposTexto = [
-                'razon_social',
-                'domicilio_empresa',
-                'nombre_apellido',
-                'telefono',
-                'celular',
-                'domicilio_empleado'
-            ];
-            camposTexto.forEach(id => {
-                const valor = document.getElementById(id).textContent.trim();
-                jsonData[id] = valor;
+                // Excluir los campos individuales del empleado y empresa del JSON final
+                if (!['nombre', 'apellido', 'telefono', 'celular', 'domicilio_empleado', 'dni', 'razon_social', 'domicilio_empresa', 'razon_social_buscar'].includes(key)) {
+                    jsonData[key] = value;
+                }
             });
 
             // Calcular días de ausentismo
@@ -545,8 +590,15 @@
         // Envío del formulario usando el JSON generado
         document.getElementById('ausentismoForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Generar el JSON
             const jsonData = obtenerJsonDesdeFormulario();
+            
+            // Mostrar alerta de carga
+            mostrarAlertaCarga('Registrando control de ausentismo...');
+            
             console.log(JSON.stringify(jsonData, null, 2));
+            
             fetch('/ausentismo/registrar_ausencia', {
                 method: 'POST',
                 headers: {
@@ -562,10 +614,13 @@
                 return response.json();
             })
             .then(data => {
-                alert('Control de ausentismo registrado correctamente');
+                cerrarAlertaCarga();
+                mostrarAlertaExito('Control de ausentismo registrado correctamente', '¡Registro Exitoso!', true);
             })
             .catch(error => {
-                alert('Error al registrar el control de ausentismo: ' + error.message);
+                cerrarAlertaCarga();
+                console.error('Error al registrar el accidente:', error);
+                //mostrarAlertaError('Error al registrar el accidente', '¡Error!', true);
             });
         });
 

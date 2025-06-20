@@ -2,7 +2,7 @@
 
 ## Descripción del Proyecto
 
-Sistema web para la gestión de accidentes laborales y control de ausentismo de la Clínica San Gabriel. El proyecto incluye dos formularios principales que generan datos en formato JSON para su posterior procesamiento y almacenamiento en base de datos.
+Sistema web para la gestión de accidentes laborales y control de ausentismo de la Clínica San Gabriel. El proyecto incluye dos formularios principales que generan datos en formato JSON para su posterior procesamiento y almacenamiento en base de datos. Los formularios integran APIs externas para obtener información de empresas y empleados de forma dinámica.
 
 ## Estructura del Proyecto
 
@@ -14,7 +14,9 @@ clinica_san_gabriel/
 ├── svg-cuerpo.svg                  # Archivo SVG del cuerpo humano
 ├── header.php                      # Header común de la aplicación
 ├── footer.php                      # Footer común de la aplicación
-├── conexion.php                    # Configuración de conexión a base de datos
+├── index.php                       # Página principal con navegación
+├── busqueda_api.js                 # Funciones para búsqueda de empresas y empleados
+├── alertas.js                      # Sistema de alertas y notificaciones
 ├── ejemplo_accidente_laboral.json  # Ejemplo de JSON generado por accidente laboral
 ├── ejemplo_control_ausentismo.json # Ejemplo de JSON generado por control de ausentismo
 └── README.md                       # Este archivo
@@ -27,35 +29,94 @@ clinica_san_gabriel/
 **Propósito**: Registro de accidentes laborales con información detallada del empleado, empresa y circunstancias del accidente.
 
 **Características principales**:
+- **Búsqueda dinámica** de empresas y empleados mediante APIs
 - Cálculo automático de antigüedad basado en fecha de ingreso
 - Selección de partes del cuerpo afectadas mediante SVG interactivo
 - Generación automática de JSON con todos los datos del formulario
 - Validación de campos obligatorios
+- Sistema de alertas con SweetAlert2
 
 **Campos principales**:
-- **Empresa**: CUIT, razón social, domicilio
-- **Empleado**: DNI, datos personales, puesto, área, antigüedad
+- **Empresa**: Búsqueda por razón social, datos obtenidos desde API
+- **Empleado**: Búsqueda por DNI, datos personales obtenidos desde API
+- **Información laboral**: Puesto, área, fecha de ingreso, antigüedad calculada
+- **Obra social**: Plan, número de afiliado
 - **Accidente**: Tipo, agente causal, testigos, descripción
 - **Lesión**: Tipo, gravedad, partes afectadas, diagnóstico
-- **Médico**: Datos del médico tratante, matrícula
+- **Médico**: Datos del médico tratante, matrícula, observaciones
 
 ### 2. Formulario de Control de Ausentismo (`form_control_ausentismo.php`)
 
 **Propósito**: Control y seguimiento de licencias médicas y ausentismo laboral.
 
 **Características principales**:
+- **Búsqueda dinámica** de empresas y empleados mediante APIs
 - Cálculo automático de días de ausentismo
 - Cálculo automático de antigüedad
 - Determinación automática del día de la semana del inicio de certificado
 - Selección de partes del cuerpo afectadas
 - Generación automática de JSON
+- Sistema de alertas con SweetAlert2
 
 **Campos principales**:
-- **Empresa y Empleado**: Datos básicos similares al formulario de accidente
+- **Empresa y Empleado**: Datos obtenidos desde APIs externas
+- **Información laboral**: Puesto, área, antigüedad calculada
+- **Obra social**: Plan, número de afiliado
 - **Licencia**: Tipo, agente causal, diagnóstico, tratamiento
-- **Certificado**: Fechas de inicio y vencimiento, días calculados
+- **Certificado**: Fechas de inicio y vencimiento, días calculados automáticamente
 - **Control**: Resultado del control médico, aptitud para reingreso
 - **ART**: Información de denuncia y seguimiento
+
+## Integración con APIs
+
+### Búsqueda de Empresas
+
+El sistema integra APIs externas para obtener información de empresas:
+
+- **Búsqueda por razón social** con autocompletado
+- **Datos obtenidos**: Razón social, domicilio, ID de empresa
+- **Validación** de datos antes de mostrar
+- **Almacenamiento** del ID de empresa en el JSON final
+
+### Búsqueda de Empleados
+
+Sistema de búsqueda de empleados por DNI:
+
+- **Búsqueda por DNI** con validación
+- **Datos obtenidos**: Nombre, apellido, teléfono, celular, domicilio
+- **Validación** de datos antes de mostrar
+- **Almacenamiento** del ID de paciente en el JSON final
+
+### Archivo `busqueda_api.js`
+
+Contiene todas las funciones para la integración con APIs:
+
+```javascript
+// Configuración para búsquedas
+const configAccidente = {
+    empresas: {
+        inputId: 'razon_social_buscar',
+        btnId: 'btnBuscarEmpresa',
+        empresaIdField: 'empresa_id_hidden',
+        campos: [
+            { id: 'razon_social', apiField: 'razonsocial' },
+            { id: 'domicilio_empresa', apiField: 'domicilio' }
+        ]
+    },
+    empleados: {
+        dniId: 'dni',
+        btnId: 'btnBuscarEmpleado',
+        pacienteIdField: 'paciente_id_hidden',
+        campos: [
+            { id: 'nombre', apiField: 'nombres' },
+            { id: 'apellido', apiField: 'apellidos' },
+            { id: 'telefono', apiField: 'telefono' },
+            { id: 'celular', apiField: 'celular' },
+            { id: 'domicilio_empleado', apiField: 'domicilio' }
+        ]
+    }
+};
+```
 
 ## Funcionalidades Técnicas
 
@@ -93,6 +154,7 @@ partes_afectadas: ["brazo_derecho", "mano_derecha"]
 
 Cada formulario genera automáticamente un JSON completo que incluye:
 
+- **IDs de referencia** para empresa y empleado (obtenidos desde APIs)
 - **Todos los campos** del formulario
 - **Cálculos automáticos** (antigüedad, días de ausentismo, etc.)
 - **Datos estructurados** para fácil procesamiento
@@ -108,20 +170,23 @@ El formulario de control de ausentismo incluye:
 - **Validación** de fechas
 - **Inclusión** en el JSON para procesamiento
 
+### Sistema de Alertas
+
+Implementado con SweetAlert2 para:
+
+- **Alertas de carga** durante el envío de formularios
+- **Mensajes de éxito** con redirección opcional
+- **Mensajes de error** descriptivos
+- **Confirmaciones** para acciones importantes
+
 ## Estructura de Datos JSON
 
 ### Formulario de Accidente Laboral
 
 ```json
 {
-  "cuit": "20-12345678-9",
-  "razon_social": "Empresa Ejemplo S.A.",
-  "domicilio_empresa": "Av. Corrientes 1234, CABA",
-  "dni": "12345678",
-  "nombre_apellido": "Juan Pérez",
-  "telefono": "011-1234-5678",
-  "celular": "11-1234-5678",
-  "domicilio_empleado": "Belgrano 567, CABA",
+  "empresa_id": "123",
+  "paciente_id": "456",
   "puesto": "Operario",
   "area": "Producción",
   "fecha_ingreso": "2020-03-15",
@@ -155,14 +220,8 @@ El formulario de control de ausentismo incluye:
 
 ```json
 {
-  "cuit": "20-98765432-1",
-  "razon_social": "Industrias Ejemplo S.A.",
-  "domicilio_empresa": "Rivadavia 987, CABA",
-  "dni": "87654321",
-  "nombre_apellido": "Ana Rodríguez",
-  "telefono": "011-9876-5432",
-  "celular": "11-9876-5432",
-  "domicilio_empleado": "San Martín 321, CABA",
+  "empresa_id": "456",
+  "paciente_id": "789",
   "puesto": "Supervisor",
   "area": "Calidad",
   "fecha_ingreso": "2019-06-10",
@@ -204,8 +263,9 @@ El formulario de control de ausentismo incluye:
 
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+), Bootstrap 5
 - **Backend**: PHP 7.4+
-- **Base de Datos**: MySQL/MariaDB
+- **APIs**: Integración con APIs externas para empresas y empleados
 - **Interactividad**: Vue.js (para selección de partes del cuerpo)
+- **Alertas**: SweetAlert2 para notificaciones
 - **Formato de Datos**: JSON
 - **Servidor Web**: Apache (XAMPP)
 
@@ -214,27 +274,25 @@ El formulario de control de ausentismo incluye:
 ### Requisitos Previos
 
 - XAMPP o servidor web con PHP 7.4+
-- MySQL/MariaDB
 - Navegador web moderno
+- Acceso a APIs externas para empresas y empleados
 
 ### Pasos de Instalación
 
 1. **Clonar/Descargar** el proyecto en la carpeta `htdocs` de XAMPP
-2. **Configurar** la base de datos en `conexion.php`
+2. **Configurar** las URLs de las APIs en `busqueda_api.js`
 3. **Acceder** a `http://localhost/clinica_san_gabriel/`
 4. **Verificar** que todos los archivos estén en su lugar
 
-### Configuración de Base de Datos
+### Configuración de APIs
 
-Editar `conexion.php` con los datos de conexión:
+Editar `busqueda_api.js` con las URLs de las APIs:
 
-```php
-<?php
-$host = 'localhost';
-$usuario = 'tu_usuario';
-$password = 'tu_password';
-$base_datos = 'clinica_san_gabriel';
-?>
+```javascript
+// URLs de las APIs (configurar según el entorno)
+const API_BASE_URL = 'https://api.ejemplo.com';
+const API_EMPRESAS = `${API_BASE_URL}/empresas`;
+const API_EMPLEADOS = `${API_BASE_URL}/empleados`;
 ```
 
 ## Uso del Sistema
@@ -242,21 +300,24 @@ $base_datos = 'clinica_san_gabriel';
 ### Formulario de Accidente Laboral
 
 1. **Acceder** a `form_accidente_laboral.php`
-2. **Completar** los datos de empresa y empleado
-3. **Seleccionar** fecha de ingreso (se calcula automáticamente la antigüedad)
-4. **Completar** información del accidente
-5. **Seleccionar** partes del cuerpo afectadas en el SVG
-6. **Agregar** descripción y datos médicos
-7. **Enviar** el formulario (se genera JSON automáticamente)
+2. **Buscar empresa** ingresando razón social y haciendo clic en "Buscar"
+3. **Buscar empleado** ingresando DNI y haciendo clic en "Buscar"
+4. **Completar** información laboral (puesto, área, fecha de ingreso)
+5. **Seleccionar** fecha de ingreso (se calcula automáticamente la antigüedad)
+6. **Completar** información del accidente
+7. **Seleccionar** partes del cuerpo afectadas en el SVG
+8. **Agregar** descripción y datos médicos
+9. **Enviar** el formulario (se genera JSON automáticamente)
 
 ### Formulario de Control de Ausentismo
 
 1. **Acceder** a `form_control_ausentismo.php`
-2. **Completar** datos básicos de empresa y empleado
-3. **Ingresar** información de la licencia
-4. **Seleccionar** fechas de certificado (se calculan días automáticamente)
-5. **Completar** datos del control médico
-6. **Enviar** el formulario (se genera JSON automáticamente)
+2. **Buscar empresa y empleado** usando las funciones de búsqueda
+3. **Completar** información laboral
+4. **Ingresar** información de la licencia
+5. **Seleccionar** fechas de certificado (se calculan días automáticamente)
+6. **Completar** datos del control médico
+7. **Enviar** el formulario (se genera JSON automáticamente)
 
 ## Características Técnicas Avanzadas
 
@@ -266,6 +327,7 @@ $base_datos = 'clinica_san_gabriel';
 - **Campos obligatorios** marcados visualmente
 - **Validación de fechas** y formatos
 - **Prevención de envío** con datos incompletos
+- **Validación de datos** obtenidos desde APIs
 
 ### Responsive Design
 
@@ -287,6 +349,13 @@ $base_datos = 'clinica_san_gabriel';
 - **Día de la semana** del inicio de certificado
 - **Validación** de fechas lógicas
 
+### Integración con APIs
+
+- **Búsqueda en tiempo real** de empresas y empleados
+- **Validación** de datos obtenidos
+- **Manejo de errores** de conexión
+- **Almacenamiento** de IDs de referencia
+
 ## Mantenimiento y Desarrollo
 
 ### Estructura Modular
@@ -294,18 +363,21 @@ $base_datos = 'clinica_san_gabriel';
 - **Componentes reutilizables** (header, footer, partes_cuerpo)
 - **Separación** de lógica y presentación
 - **Archivos** organizados por funcionalidad
+- **APIs** centralizadas en archivos específicos
 
 ### Extensibilidad
 
 - **Fácil agregado** de nuevos campos
 - **Sistema modular** para nuevos formularios
 - **JSON estructurado** para integración con otros sistemas
+- **APIs configurables** para diferentes entornos
 
 ### Logs y Depuración
 
 - **Console.log** para verificar datos
 - **Validación** de JSON generado
 - **Mensajes** de error descriptivos
+- **Alertas** informativas para el usuario
 
 ## Contacto y Soporte
 
@@ -313,6 +385,6 @@ Para consultas técnicas o soporte, contactar al equipo de desarrollo de la Clí
 
 ---
 
-**Versión**: 1.0  
+**Versión**: 2.0  
 **Última actualización**: Enero 2024  
 **Desarrollado para**: Clínica San Gabriel 

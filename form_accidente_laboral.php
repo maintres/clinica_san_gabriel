@@ -19,9 +19,12 @@
                     <div class="row mb-3">
                         <div class="col-md-5">
                             <div class="input-group">
-                                <label class="input-group-text" for="cuit">CUIT</label>
-                                <input type="text" class="form-control" id="cuit" name="cuit">
-                                <button type="button" class="btn btn-primary">
+                                <label class="input-group-text" for="razon_social_buscar">Razón Social</label>
+                                <input type="text" class="form-control" id="razon_social_buscar" name="razon_social_buscar" placeholder="Ingrese razón social" list="empresas-list" autocomplete="off">
+                                <datalist id="empresas-list">
+                                    <!-- Las opciones se cargarán dinámicamente -->
+                                </datalist>
+                                <button type="button" class="btn btn-primary" id="btnBuscarEmpresa">
                                     <i class="fas fa-search me-1"></i>Buscar
                                 </button>
                             </div>
@@ -31,7 +34,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="razon_social" class="form-label">Razón Social</label>
-                            <p id="razon_social" class="form-control-plaintext"></p>
+                            <p id="razon_social" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="razon_social">
                         </div>
                     </div>
@@ -39,10 +42,13 @@
                     <div class="row mb-3">                        
                         <div class="col-md-6">
                             <label for="domicilio_empresa" class="form-label">Domicilio</label>
-                            <p id="domicilio_empresa" class="form-control-plaintext"></p>
+                            <p id="domicilio_empresa" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="domicilio_empresa">
                         </div>                         
                     </div>
+
+                    <!-- Campo hidden para el ID de la empresa -->
+                    <input type="hidden" id="empresa_id_hidden" name="empresa_id" value="">
 
                     <hr class="my-4">
                     <!-- SECCIÓN EMPLEADO -->
@@ -54,8 +60,8 @@
                         <div class="col-md-5">
                             <div class="input-group">
                                 <label class="input-group-text" for="dni">DNI</label>
-                                <input type="text" class="form-control" id="dni" name="dni">
-                                <button type="button" class="btn btn-primary">
+                                <input type="text" class="form-control" id="dni" name="dni" value="">
+                                <button type="button" class="btn btn-primary" id="btnBuscarEmpleado">
                                     <i class="fas fa-search me-1"></i>Buscar
                                 </button>
                             </div>
@@ -64,18 +70,22 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="nombre_apellido" class="form-label">Nombre y Apellido</label>
-                            <p id="nombre_apellido" class="form-control-plaintext"></p>
-                            <input type="hidden" name="nombre_apellido">
+                            <label for="nombre" class="form-label">Nombre y Apellido</label>
+                            <div class="d-flex">
+                                <p id="nombre" class="me-2 fw-bold"></p>
+                                <p id="apellido" class="fw-bold"></p>
+                            </div>
+                            <input type="hidden" name="nombre">
+                            <input type="hidden" name="apellido">
                         </div>
                         <div class="col-md-3">
                             <label for="telefono" class="form-label">Teléfono</label>
-                            <p id="telefono" class="form-control-plaintext"></p>
+                            <p id="telefono" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="telefono">
                         </div>
                         <div class="col-md-3">
                             <label for="celular" class="form-label">Celular</label>
-                            <p id="celular" class="form-control-plaintext"></p>
+                            <p id="celular" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="celular">
                         </div>
                     </div>
@@ -83,11 +93,14 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="domicilio_empleado" class="form-label">Domicilio</label>
-                            <p id="domicilio_empleado" class="form-control-plaintext"></p>
+                            <p id="domicilio_empleado" class="form-control-plaintext fw-bold"></p>
                             <input type="hidden" name="domicilio_empleado">
                         </div>
                          
                     </div>
+
+                    <!-- Campo hidden para el ID del paciente -->
+                    <input type="hidden" id="paciente_id_hidden" name="paciente_id" value="">
 
                     <hr class="my-4">
 
@@ -265,7 +278,46 @@
         </div>
     </div>
 
+    <!-- Incluir el archivo JS de búsquedas -->
+    <script src="busqueda_api.js"></script>
+    
+    <!-- Incluir SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Incluir funciones de alerta -->
+    <script src="alertas.js"></script>
+
     <script>
+        // Configuración para el formulario de accidente laboral
+        const configAccidente = {
+            empresas: {
+                inputId: 'razon_social_buscar',
+                btnId: 'btnBuscarEmpresa',
+                empresaIdField: 'empresa_id_hidden',
+                campos: [
+                    { id: 'razon_social', apiField: 'razonsocial' },
+                    { id: 'domicilio_empresa', apiField: 'domicilio' }
+                ]
+            },
+            empleados: {
+                dniId: 'dni',
+                btnId: 'btnBuscarEmpleado',
+                pacienteIdField: 'paciente_id_hidden',
+                campos: [
+                    { id: 'nombre', apiField: 'nombres' },
+                    { id: 'apellido', apiField: 'apellidos' },
+                    { id: 'telefono', apiField: 'telefono' },
+                    { id: 'celular', apiField: 'celular' },
+                    { id: 'domicilio_empleado', apiField: 'domicilio' }
+                ]
+            }
+        };
+
+        // Inicializar las búsquedas cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            busquedaAPI.inicializarBusquedas(configAccidente);
+        });
+
         // Cálculo automático de antigüedad
         function calcularAntiguedad() {
             const fechaIngreso = document.getElementById('fecha_ingreso').value;
@@ -305,10 +357,10 @@
                 
                 document.getElementById('antiguedad').value = resultado;
             }
-        }
+        }      
 
         document.getElementById('fecha_ingreso').addEventListener('change', calcularAntiguedad);
-
+        
         // Función para obtener el JSON desde el formulario
         function obtenerJsonDesdeFormulario() {
             const form = document.getElementById('accidentForm');
@@ -317,17 +369,15 @@
 
             // Recorrer todos los campos del formulario
             formData.forEach((value, key) => {
-                jsonData[key] = value;
+                // Excluir los campos individuales del empleado y empresa del JSON final
+                if (!['nombre', 'apellido', 'telefono', 'celular', 'domicilio_empleado', 'dni', 'razon_social', 'domicilio_empresa', 'razon_social_buscar'].includes(key)) {
+                    jsonData[key] = value;
+                }
             });
 
             // Obtener los campos que están en <p> y sincronizarlos con los <input type="hidden">
             const camposTexto = [
-                'razon_social',
-                'domicilio_empresa',
-                'nombre_apellido',
-                'telefono',
-                'celular',
-                'domicilio_empleado'
+                // Ya no necesitamos estos campos porque se excluyen del JSON final
             ];
             camposTexto.forEach(id => {
                 const valor = document.getElementById(id).textContent.trim();
@@ -398,6 +448,9 @@
             // Generar el JSON
             const jsonData = obtenerJsonDesdeFormulario();
 
+            // Mostrar alerta de carga
+            mostrarAlertaCarga('Registrando accidente...');
+
             // Puedes mostrarlo en consola para ver el resultado
             console.log(JSON.stringify(jsonData, null, 2));
 
@@ -417,12 +470,12 @@
                 return response.json();
             })
             .then(data => {
-                alert('Accidente registrado correctamente');
-                // Opcional: limpiar el formulario o redirigir
-                // this.reset();
+                cerrarAlertaCarga();
+                mostrarAlertaExito('Accidente registrado correctamente', '¡Registro Exitoso!', true);
             })
             .catch(error => {
-                alert('Error al registrar el accidente: ' + error.message);
+                console.error('Error al registrar el accidente:', error);
+                //mostrarAlertaError('Error al registrar el accidente', '¡Error!', true);
             });
         });
     </script>
