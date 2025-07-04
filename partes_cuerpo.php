@@ -46,7 +46,7 @@
 <div class="container-fluid py-0 row" id="app">
     <!-- Card principal -->
     <div class="card shadow">
-        <div class="card-body">
+        <div class="card-body"style="border:none">
             <!-- Información de partes seleccionadas -->
             <div class="row mb-3">
                 <div class="col-12">
@@ -66,7 +66,7 @@
                             Vista Frontal <span class="text-muted mx-5 px-3"></span> Vista Posterior
                         </h6>
                         <div class="human-body d-inline-block" @click="part_clicked">                                            
-                            <?php include 'svg-cuerpo.svg'; ?>
+                            <?php include 'img/svg-cuerpo.svg'; ?>
                         </div>
                     </div>
                 </div>

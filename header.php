@@ -12,31 +12,25 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>    
     <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="style/style.css">
     <style>
-      
         /* Para el "CLÍNICA SAN GABRIEL" si quieres que sea un poco más grande */
-        .navbar-brand-custom {
-            font-size: 1.6rem; /* Ajusta este valor para el tamaño de la fuente */
-            line-height: 1.2;
-        }
-        #card-form, nav{
-            background-color: #f2f3f3;
-        }
+        
     </style>
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg shadow-sm" >
+    <nav class="navbar navbar-expand-lg ">
         <div class="container">
-            <a class="navbar-brand text-secondary fw-bold navbar-brand-custom d-flex align-items-center" href="#">
-                <img src="logo-clinica-letras.png" alt="Clínica San Gabriel" height="50" class="me-3">
+            <a class="navbar-brand fw-bold navbar-brand-custom d-flex align-items-center" href="./">
+                <img src="img/2.png" alt="Clínica San Gabriel" height="50" class="me-3" style="filter: brightness(0) invert(1) contrast(200%) saturate(0);">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="form_accidente_laboral.html">Accidente Laboral</a>
-                    <a class="nav-link" href="form_control_ausentismo.html">Control de Ausentismo</a>
+                    <a class="nav-link" href="form_accidente_laboral.php">Accidente Laboral</a>
+                    <a class="nav-link" href="form_control_ausentismo.php">Control de Ausentismo</a>
                 </div>
             </div>
         </div>

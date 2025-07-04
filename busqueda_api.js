@@ -1,304 +1,297 @@
-// Funciones de búsqueda para API de empleados y empresas
-// Reutilizable para múltiples formularios
-
-// Variables globales
-let todasLasEmpresas = [];
-
-// ========================================
-// FUNCIONES PARA BÚSQUEDA DE EMPLEADOS
-// ========================================
-
-/**
- * Busca un empleado por DNI en la API
- * @param {string} dni - DNI del empleado a buscar
- * @param {string} btnId - ID del botón de búsqueda
- * @param {Object} config - Configuración de campos
- */
-function buscarEmpleado(dni, btnId, config) {
-    if (!dni || !dni.trim()) {
-        mostrarAlertaError('Por favor, ingrese un DNI válido', 'DNI Requerido');
-        return;
-    }
-
-    // Mostrar indicador de carga
-    const btnBuscar = document.getElementById(btnId);
-    const originalText = btnBuscar.innerHTML;
-    btnBuscar.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Buscando...';
-    btnBuscar.disabled = true;
-
-    // Hacer la llamada a la API
-    fetch(`https://preocupacionales.sangabrielsj.com/api/pacientes/get_by_dni/${dni}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success === 'yes' && data.data && data.data.listado && data.data.listado.length > 0) {
-                const empleado = data.data.listado[0];
-                
-                // Mostrar los datos en los elementos <p>
-                if (config.campos) {
-                    config.campos.forEach(campo => {
-                        const elemento = document.getElementById(campo.id);
-                        if (elemento) {
-                            elemento.textContent = empleado[campo.apiField] || '';
-                        }
-                    });
-                }
-                
-                // Guardar el ID del paciente en el campo hidden
-                if (config.pacienteIdField) {
-                    document.getElementById(config.pacienteIdField).value = empleado.id;
-                }
-                
-                if (config.onSuccess) {
-                    config.onSuccess(empleado);
-                }
-            } else {
-                mostrarAlertaError('No se encontró ningún empleado con ese DNI', 'Empleado No Encontrado');
-                limpiarDatosEmpleado(config);
-            }
-        })
-        .catch(error => {
-            console.error('Error al buscar empleado:', error);
-            mostrarAlertaError('Error al buscar empleado: ' + error.message, 'Error de Búsqueda');
-            limpiarDatosEmpleado(config);
-        })
-        .finally(() => {
-            // Restaurar el botón
-            btnBuscar.innerHTML = originalText;
-            btnBuscar.disabled = false;
-        });
-}
-
-/**
- * Limpia los datos del empleado
- * @param {Object} config - Configuración de campos
- */
-function limpiarDatosEmpleado(config) {
-    if (config.campos) {
-        config.campos.forEach(campo => {
-            const elemento = document.getElementById(campo.id);
-            if (elemento) {
-                elemento.textContent = '';
-            }
-        });
-    }
+// API de búsqueda para formularios
+const busquedaAPI = {
+    // Configuración global
+    config: null,
     
-    // Limpiar el ID del paciente
-    if (config.pacienteIdField) {
-        document.getElementById(config.pacienteIdField).value = '';
-    }
-}
-
-// ========================================
-// FUNCIONES PARA BÚSQUEDA DE EMPRESAS
-// ========================================
-
-/**
- * Carga todas las empresas de la API
- */
-function cargarTodasLasEmpresas() {
-    fetch('https://preocupacionales.sangabrielsj.com/api/empresas/get_all')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success === 'yes' && data.data && data.data.listado) {
-                todasLasEmpresas = data.data.listado;
-                actualizarDatalistEmpresas();
-            }
-        })
-        .catch(error => {
-            console.error('Error al cargar empresas:', error);
-            mostrarAlertaError('Error al cargar la lista de empresas', 'Error de Carga');
-        });
-}
-
-/**
- * Actualiza el datalist con todas las empresas
- */
-function actualizarDatalistEmpresas() {
-    const datalist = document.getElementById('empresas-list');
-    if (!datalist) return;
+    // Cache de empresas
+    empresasCache: [],
     
-    datalist.innerHTML = '';
+    // Inicializar las búsquedas
+    inicializarBusquedas: function(config) {
+        this.config = config;
+        
+        // Cargar empresas al inicializar
+        this.cargarEmpresas();
+        
+        // Configurar eventos de búsqueda
+        this.configurarEventos();
+    },
     
-    todasLasEmpresas.forEach(empresa => {
-        if (empresa.razonsocial) {
+    // Cargar todas las empresas desde la API
+    cargarEmpresas: function() {
+        fetch('/empresas/get_all')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al cargar empresas');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && Array.isArray(data)) {
+                    this.empresasCache = data;
+                    this.actualizarDatalistEmpresas();
+                } else {
+                    console.error('Formato de respuesta inválido:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar empresas:', error);
+                mostrarAlertaError('Error al cargar la lista de empresas', 'Error de conexión');
+            });
+    },
+    
+    // Actualizar el datalist con las empresas cargadas
+    actualizarDatalistEmpresas: function() {
+        const datalist = document.getElementById('empresas-list');
+        if (!datalist) return;
+        
+        // Limpiar opciones existentes
+        datalist.innerHTML = '';
+        
+        // Agregar nuevas opciones
+        this.empresasCache.forEach(empresa => {
             const option = document.createElement('option');
-            option.value = empresa.razonsocial;
-            option.setAttribute('data-id', empresa.id);
-            option.setAttribute('data-domicilio', empresa.domicilio || '');
+            option.value = empresa.razonsocial || empresa.razon_social || '';
+            option.textContent = empresa.razonsocial || empresa.razon_social || '';
             datalist.appendChild(option);
-        }
-    });
-}
-
-/**
- * Busca empresa por razón social
- * @param {string} razonSocial - Razón social a buscar
- * @param {Object} config - Configuración de campos
- */
-function buscarEmpresa(razonSocial, config) {
-    if (!razonSocial || !razonSocial.trim()) {
-        mostrarAlertaError('Por favor, ingrese una razón social válida', 'Razón Social Requerida');
-        return;
-    }
-
-    // Buscar en la lista local de empresas
-    const empresa = todasLasEmpresas.find(emp => 
-        emp.razonsocial && 
-        emp.razonsocial.toLowerCase().includes(razonSocial.toLowerCase())
-    );
+        });
+    },
     
-    if (empresa) {
-        // Mostrar los datos en los elementos <p>
-        if (config.campos) {
-            config.campos.forEach(campo => {
-                const elemento = document.getElementById(campo.id);
-                if (elemento) {
-                    elemento.textContent = empresa[campo.apiField] || '';
-                }
+    // Configurar eventos de búsqueda
+    configurarEventos: function() {
+        // Evento para búsqueda de empresa
+        const btnBuscarEmpresa = document.getElementById(this.config.empresas.btnId);
+        if (btnBuscarEmpresa) {
+            btnBuscarEmpresa.addEventListener('click', () => {
+                this.buscarEmpresa();
             });
         }
         
-        // Guardar el ID de la empresa en el campo hidden
-        if (config.empresaIdField) {
-            document.getElementById(config.empresaIdField).value = empresa.id;
+        // Evento para búsqueda de empleado
+        const btnBuscarEmpleado = document.getElementById(this.config.empleados.btnId);
+        if (btnBuscarEmpleado) {
+            btnBuscarEmpleado.addEventListener('click', () => {
+                this.buscarEmpleado();
+            });
         }
         
-        if (config.onSuccess) {
-            config.onSuccess(empresa);
+        // Evento para búsqueda automática al escribir en el campo de empresa
+        const inputEmpresa = document.getElementById(this.config.empresas.inputId);
+        if (inputEmpresa) {
+            inputEmpresa.addEventListener('input', (e) => {
+                this.buscarEmpresaPorTexto(e.target.value);
+            });
         }
-    } else {
-        mostrarAlertaError('No se encontró ninguna empresa con esa razón social', 'Empresa No Encontrada');
-        limpiarDatosEmpresa(config);
-    }
-}
-
-/**
- * Limpia los datos de la empresa
- * @param {Object} config - Configuración de campos
- */
-function limpiarDatosEmpresa(config) {
-    if (config.campos) {
-        config.campos.forEach(campo => {
+    },
+    
+    // Buscar empresa por texto (búsqueda automática)
+    buscarEmpresaPorTexto: function(texto) {
+        if (!texto || texto.length < 2) {
+            this.limpiarCamposEmpresa();
+            return;
+        }
+        
+        const empresaEncontrada = this.empresasCache.find(empresa => {
+            const razonSocial = (empresa.razonsocial || empresa.razon_social || '').toLowerCase();
+            return razonSocial.includes(texto.toLowerCase());
+        });
+        
+        if (empresaEncontrada) {
+            this.mostrarDatosEmpresa(empresaEncontrada);
+        } else {
+            this.limpiarCamposEmpresa();
+        }
+    },
+    
+    // Buscar empresa (botón buscar)
+    buscarEmpresa: function() {
+        const inputEmpresa = document.getElementById(this.config.empresas.inputId);
+        const texto = inputEmpresa.value.trim();
+        
+        if (!texto) {
+            mostrarAlertaError('Por favor ingrese una razón social', 'Campo requerido');
+            return;
+        }
+        
+        // Buscar en el cache local primero
+        const empresaEncontrada = this.empresasCache.find(empresa => {
+            const razonSocial = (empresa.razonsocial || empresa.razon_social || '').toLowerCase();
+            return razonSocial === texto.toLowerCase();
+        });
+        
+        if (empresaEncontrada) {
+            this.mostrarDatosEmpresa(empresaEncontrada);
+            mostrarAlertaExito('Empresa encontrada', 'Búsqueda exitosa');
+        } else {
+            mostrarAlertaError('Empresa no encontrada', 'No se encontraron resultados');
+            this.limpiarCamposEmpresa();
+        }
+    },
+    
+    // Mostrar datos de la empresa en los campos
+    mostrarDatosEmpresa: function(empresa) {
+        // Actualizar campos de visualización
+        this.config.empresas.campos.forEach(campo => {
+            const elemento = document.getElementById(campo.id);
+            const valor = empresa[campo.apiField] || '';
+            
+            if (elemento) {
+                if (elemento.tagName === 'P') {
+                    elemento.textContent = valor;
+                } else {
+                    elemento.value = valor;
+                }
+            }
+        });
+        
+        // Actualizar campo hidden del ID de empresa
+        const empresaIdField = document.getElementById(this.config.empresas.empresaIdField);
+        if (empresaIdField) {
+            empresaIdField.value = empresa.id || empresa.empresa_id || '';
+        }
+        
+        // Sincronizar campos hidden
+        this.sincronizarCamposHidden();
+    },
+    
+    // Limpiar campos de empresa
+    limpiarCamposEmpresa: function() {
+        this.config.empresas.campos.forEach(campo => {
             const elemento = document.getElementById(campo.id);
             if (elemento) {
-                elemento.textContent = '';
+                if (elemento.tagName === 'P') {
+                    elemento.textContent = '';
+                } else {
+                    elemento.value = '';
+                }
+            }
+        });
+        
+        // Limpiar campo hidden del ID
+        const empresaIdField = document.getElementById(this.config.empresas.empresaIdField);
+        if (empresaIdField) {
+            empresaIdField.value = '';
+        }
+        
+        // Sincronizar campos hidden
+        this.sincronizarCamposHidden();
+    },
+    
+    // Buscar empleado por DNI
+    buscarEmpleado: function() {
+        const dni = document.getElementById(this.config.empleados.dniId).value.trim();
+        
+        if (!dni) {
+            mostrarAlertaError('Por favor ingrese un DNI', 'Campo requerido');
+            return;
+        }
+        
+        // Mostrar alerta de carga
+        mostrarAlertaCarga('Buscando empleado...');
+        
+        fetch(`/pacientes/get_by_dni/${dni}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.json();
+            })
+            .then(data => {
+                cerrarAlertaCarga();
+                
+                if (data && data.id) {
+                    this.mostrarDatosEmpleado(data);
+                    mostrarAlertaExito('Empleado encontrado', 'Búsqueda exitosa');
+                } else {
+                    mostrarAlertaError('Empleado no encontrado', 'No se encontraron resultados');
+                    this.limpiarCamposEmpleado();
+                }
+            })
+            .catch(error => {
+                cerrarAlertaCarga();
+                console.error('Error al buscar empleado:', error);
+                mostrarAlertaError('Error al buscar empleado', 'Error de conexión');
+                this.limpiarCamposEmpleado();
+            });
+    },
+    
+    // Mostrar datos del empleado en los campos
+    mostrarDatosEmpleado: function(empleado) {
+        // Actualizar campos de visualización
+        this.config.empleados.campos.forEach(campo => {
+            const elemento = document.getElementById(campo.id);
+            const valor = empleado[campo.apiField] || '';
+            
+            if (elemento) {
+                if (elemento.tagName === 'P') {
+                    elemento.textContent = valor;
+                } else {
+                    elemento.value = valor;
+                }
+            }
+        });
+        
+        // Actualizar campo hidden del ID de paciente
+        const pacienteIdField = document.getElementById(this.config.empleados.pacienteIdField);
+        if (pacienteIdField) {
+            pacienteIdField.value = empleado.id || empleado.paciente_id || '';
+        }
+        
+        // Sincronizar campos hidden
+        this.sincronizarCamposHidden();
+    },
+    
+    // Limpiar campos de empleado
+    limpiarCamposEmpleado: function() {
+        this.config.empleados.campos.forEach(campo => {
+            const elemento = document.getElementById(campo.id);
+            if (elemento) {
+                if (elemento.tagName === 'P') {
+                    elemento.textContent = '';
+                } else {
+                    elemento.value = '';
+                }
+            }
+        });
+        
+        // Limpiar campo hidden del ID
+        const pacienteIdField = document.getElementById(this.config.empleados.pacienteIdField);
+        if (pacienteIdField) {
+            pacienteIdField.value = '';
+        }
+        
+        // Sincronizar campos hidden
+        this.sincronizarCamposHidden();
+    },
+    
+    // Sincronizar campos hidden con los campos de visualización
+    sincronizarCamposHidden: function() {
+        // Sincronizar campos de empresa
+        this.config.empresas.campos.forEach(campo => {
+            const elementoVisual = document.getElementById(campo.id);
+            const elementoHidden = document.querySelector(`input[name="${campo.id}"]`);
+            
+            if (elementoVisual && elementoHidden) {
+                if (elementoVisual.tagName === 'P') {
+                    elementoHidden.value = elementoVisual.textContent.trim();
+                } else {
+                    elementoHidden.value = elementoVisual.value;
+                }
+            }
+        });
+        
+        // Sincronizar campos de empleado
+        this.config.empleados.campos.forEach(campo => {
+            const elementoVisual = document.getElementById(campo.id);
+            const elementoHidden = document.querySelector(`input[name="${campo.id}"]`);
+            
+            if (elementoVisual && elementoHidden) {
+                if (elementoVisual.tagName === 'P') {
+                    elementoHidden.value = elementoVisual.textContent.trim();
+                } else {
+                    elementoHidden.value = elementoVisual.value;
+                }
             }
         });
     }
-    
-    // Limpiar el ID de la empresa
-    if (config.empresaIdField) {
-        document.getElementById(config.empresaIdField).value = '';
-    }
-}
-
-/**
- * Configura el autocompletado de empresas
- * @param {string} inputId - ID del input de búsqueda
- * @param {Object} config - Configuración de campos
- */
-function configurarAutocompletadoEmpresas(inputId, config) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-
-    input.addEventListener('input', function(e) {
-        const valor = e.target.value;
-        const empresa = todasLasEmpresas.find(emp => emp.razonsocial === valor);
-        
-        if (empresa) {
-            // Auto-completar los datos cuando se selecciona una opción
-            if (config.campos) {
-                config.campos.forEach(campo => {
-                    const elemento = document.getElementById(campo.id);
-                    if (elemento) {
-                        elemento.textContent = empresa[campo.apiField] || '';
-                    }
-                });
-            }
-            
-            // Guardar el ID de la empresa
-            if (config.empresaIdField) {
-                document.getElementById(config.empresaIdField).value = empresa.id;
-            }
-        }
-    });
-}
-
-// ========================================
-// FUNCIONES DE INICIALIZACIÓN
-// ========================================
-
-/**
- * Inicializa las funciones de búsqueda para un formulario
- * @param {Object} config - Configuración completa del formulario
- */
-function inicializarBusquedas(config) {
-    // Cargar empresas al cargar la página
-    if (config.empresas) {
-        cargarTodasLasEmpresas();
-        
-        // Configurar autocompletado
-        if (config.empresas.inputId) {
-            configurarAutocompletadoEmpresas(config.empresas.inputId, config.empresas);
-        }
-        
-        // Event listeners para empresa
-        if (config.empresas.btnId) {
-            document.getElementById(config.empresas.btnId).addEventListener('click', function() {
-                const valor = document.getElementById(config.empresas.inputId).value;
-                buscarEmpresa(valor, config.empresas);
-            });
-        }
-        
-        if (config.empresas.inputId) {
-            document.getElementById(config.empresas.inputId).addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const valor = e.target.value;
-                    buscarEmpresa(valor, config.empresas);
-                }
-            });
-        }
-    }
-    
-    // Event listeners para empleados
-    if (config.empleados) {
-        if (config.empleados.btnId) {
-            document.getElementById(config.empleados.btnId).addEventListener('click', function() {
-                const dni = document.getElementById(config.empleados.dniId).value;
-                buscarEmpleado(dni, config.empleados.btnId, config.empleados);
-            });
-        }
-        
-        if (config.empleados.dniId) {
-            document.getElementById(config.empleados.dniId).addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const dni = e.target.value;
-                    buscarEmpleado(dni, config.empleados.btnId, config.empleados);
-                }
-            });
-        }
-    }
-}
-
-// Exportar funciones para uso global
-window.busquedaAPI = {
-    buscarEmpleado,
-    limpiarDatosEmpleado,
-    buscarEmpresa,
-    limpiarDatosEmpresa,
-    cargarTodasLasEmpresas,
-    configurarAutocompletadoEmpresas,
-    inicializarBusquedas
 }; 
