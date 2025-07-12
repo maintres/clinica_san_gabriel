@@ -1,8 +1,8 @@
 <?php include 'header.php'; ?>
     <div class="container-fluid container py-4">
-        <div class="card shadow" id="card-form" >
-            <div class="card-header bg-transparent text-white">
-                <h3 class="text-center mb-0"><i class="fas fa-calendar-times me-2"></i>Control de Ausentismo</h3>
+        <div class="card shadow card-form">
+            <div class="card-header">
+                <h4 class="text-center mb-0"><i class="fas fa-calendar-times me-2"></i>Control de Ausentismo</h4>
             </div>
             
             <div class="card-body">
@@ -15,17 +15,11 @@
                     <div class="row mb-3">
                         <div class="col-md-5">
                             <div class="input-group">
-                                <label class="input-group-text" for="razon_social_buscar">Razón Social</label>
-                                <input type="text" class="form-control" id="razon_social_buscar" name="razon_social_buscar" placeholder="Ingrese razón social" list="empresas-list" autocomplete="off">
-                                <datalist id="empresas-list">
-                                    <!-- Las opciones se cargarán dinámicamente -->
-                                </datalist>
-                                <style>
-                                    
-                                </style>
-                                <button type="button" class="btn btn-transparent"style="border:1px solid #e23189" id="btnBuscarEmpresa">
+                                <label class="input-group-text" for="razon_social_buscar"><i class="fas fa-search me-2"></i>Razón Social</label>
+                                <input type="text" class="form-control" id="razon_social_buscar" name="razon_social_buscar" placeholder="Buscar por razón social" autocomplete="off">
+                                <!--<button type="button" class="btn btn-transparent"style="border:1px solid #e23189" id="btnBuscarEmpresa">
                                     <i class="fas fa-search me-1"></i>Buscar
-                                </button>
+                                </button>-->
                             </div>
                         </div>
                     </div>
@@ -232,13 +226,13 @@
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="dias_ausentismo" class="form-label">Días de ausentismo: <strong id="dias_ausentismo">0</strong></label>
+                            <label for="cantidad_dias" class="form-label">Días de ausentismo: <strong id="cantidad_dias">0</strong></label>
                         </div>
                     </div>
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="dia_inicio_cert" class="form-label">Día inicio certificado: <strong id="dia_inicio_cert"></strong></label>
+                            <label for="dia_inicio_semana" class="form-label">Día inicio certificado: <strong id="dia_inicio_semana"></strong></label>
                         </div>
                     </div>
                     <label for="inicio_certificado" class="form-label">Dia de presentacion de certificado: <strong id="inicio_texto"></strong></label>
@@ -254,7 +248,7 @@
                             const fecha1 = new Date(inicio);
                             const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
                             const diaSemana = diasSemana[fecha1.getDay()];
-                            document.getElementById('dia_inicio_cert').textContent = diaSemana;
+                            document.getElementById('dia_inicio_semana').textContent = diaSemana;
                         }
 
                         if(fin) {
@@ -266,15 +260,15 @@
                             const fecha2 = new Date(fin);
                             const diferencia = fecha2 - fecha1;
                             const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24)) + 1;
-                            document.getElementById('dias_ausentismo').textContent = dias;
+                            document.getElementById('cantidad_dias').textContent = dias;
                         }
                     }
                     </script>
                     
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label for="med_tratante" class="form-label">Médico tratante:</label>
-                            <input type="text" class="form-control" id="med_tratante" name="med_tratante">
+                            <label for="medico_tratante" class="form-label">Médico tratante:</label>
+                            <input type="text" class="form-control" id="medico_tratante" name="medico_tratante">
                         </div>
                         <div class="col-md-4">
                             <label for="matricula" class="form-label">Matrícula:</label>
@@ -319,8 +313,8 @@
                             <input type="date" class="form-control" id="fecha_control" name="fecha_control">
                         </div>
                         <div class="col-md-6">
-                            <label for="med_auditor" class="form-label">Médico auditor:</label>
-                            <input type="text" class="form-control" id="med_auditor" name="med_auditor">
+                            <label for="medico_auditor" class="form-label">Médico auditor:</label>
+                            <input type="text" class="form-control" id="medico_auditor" name="medico_auditor">
                         </div>
                     </div>
                     
@@ -373,6 +367,9 @@
                         <button type="submit" class="btn btn-transparent btn-lg">
                             <i class="fas fa-save me-2"></i>Guardar
                         </button>
+                        <button type="button" class="btn btn-warning btn-lg ms-3" id="btnPrueba" onclick="probarAPI()">
+                            <i class="fas fa-flask me-2"></i>Probar API
+                        </button>
                     </div>
                 </form>
                 
@@ -380,9 +377,6 @@
         </div>
     </div>
 
-    <!-- Incluir el archivo JS de búsquedas -->
-    <script src="busqueda_api.js"></script>
-    
     <!-- Incluir SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -390,36 +384,6 @@
     <script src="alertas.js"></script>
 
     <script>
-        // Configuración para el formulario de control de ausentismo
-        const configAusentismo = {
-            empresas: {
-                inputId: 'razon_social_buscar',
-                btnId: 'btnBuscarEmpresa',
-                empresaIdField: 'empresa_id_hidden',
-                campos: [
-                    { id: 'razon_social', apiField: 'razonsocial' },
-                    { id: 'domicilio_empresa', apiField: 'domicilio' }
-                ]
-            },
-            empleados: {
-                dniId: 'dni',
-                btnId: 'btnBuscarEmpleado',
-                pacienteIdField: 'paciente_id_hidden',
-                campos: [
-                    { id: 'nombre', apiField: 'nombres' },
-                    { id: 'apellido', apiField: 'apellidos' },
-                    { id: 'telefono', apiField: 'telefono' },
-                    { id: 'celular', apiField: 'celular' },
-                    { id: 'domicilio_empleado', apiField: 'domicilio' }
-                ]
-            }
-        };
-
-        // Inicializar las búsquedas cuando se carga la página
-        document.addEventListener('DOMContentLoaded', function() {
-            busquedaAPI.inicializarBusquedas(configAusentismo);
-        });
-
         // Cálculo automático de días de ausentismo
         function calcularDiasAusentismo() {
             const fechaInicio = document.getElementById('inicio_certificado').value;
@@ -431,7 +395,7 @@
                 const diffTime = vto - inicio;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
                 
-                document.querySelector('[for="dias_ausentismo"] + .form-control-plaintext').textContent = diffDays + ' días';
+                document.querySelector('[for="cantidad_dias"] + .form-control-plaintext').textContent = diffDays + ' días';
                 document.getElementById('dias_ausentismo_control').value = diffDays;
             }
         }
@@ -442,7 +406,7 @@
             if (fechaInicio) {
                 const fecha = new Date(fechaInicio);
                 const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-                document.querySelector('[for="dia_inicio_cert"] + .form-control-plaintext').textContent = dias[fecha.getDay()];
+                document.querySelector('[for="dia_inicio_semana"] + .form-control-plaintext').textContent = dias[fecha.getDay()];
             }
         }
 
@@ -453,48 +417,10 @@
 
         document.getElementById('vto_certificado').addEventListener('change', calcularDiasAusentismo);
         
-        // Cálculo automático de antigüedad
-        function calcularAntiguedad() {
-            const fechaIngreso = document.getElementById('fecha_ingreso').value;
-            if (fechaIngreso) {
-                const fechaIngresoDate = new Date(fechaIngreso);
-                const fechaActual = new Date();
-                
-                // Calcular diferencia en años con precisión
-                let años = fechaActual.getFullYear() - fechaIngresoDate.getFullYear();
-                const mesActual = fechaActual.getMonth();
-                const mesIngreso = fechaIngresoDate.getMonth();
-                
-                // Ajustar si aún no ha cumplido años en el año actual
-                if (mesActual < mesIngreso || (mesActual === mesIngreso && fechaActual.getDate() < fechaIngresoDate.getDate())) {
-                    años--;
-                }
-                
-                // Calcular meses adicionales
-                let meses = mesActual - mesIngreso;
-                if (meses < 0) {
-                    meses += 12;
-                }
-                
-                // Formatear el resultado solo con años y meses
-                let resultado = '';
-                if (años > 0) {
-                    resultado += años + ' año' + (años > 1 ? 's' : '');
-                }
-                if (meses > 0) {
-                    if (resultado) resultado += ', ';
-                    resultado += meses + ' mes' + (meses > 1 ? 'es' : '');
-                }
-                
-                if (!resultado) {
-                    resultado = 'Menos de 1 mes';
-                }
-                
-                document.getElementById('antiguedad').value = resultado;
-            }
-        }
+        // El cálculo de antigüedad ahora se maneja en busqueda_api.js
+        // Se inicializa automáticamente en inicializarSistemaBusqueda()
 
-        document.getElementById('fecha_ingreso').addEventListener('change', calcularAntiguedad);
+        // La inicialización ahora se maneja en busqueda_api.js
 
         // Función para obtener el JSON desde el formulario
         function obtenerJsonDesdeFormulario() {
@@ -519,64 +445,26 @@
                 const vto = new Date(fechaVto);
                 const diffTime = vto - inicio;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-                jsonData.dias_ausentismo = diffDays;
+                jsonData.cantidad_dias = diffDays;
             } else {
-                jsonData.dias_ausentismo = 0;
+                jsonData.cantidad_dias = 0;
             }
 
             // Calcular día de la semana del inicio
             if (fechaInicio) {
                 const fecha = new Date(fechaInicio);
                 const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-                jsonData.dia_inicio_cert = dias[fecha.getDay()];
+                jsonData.dia_inicio_semana = dias[fecha.getDay()];
             } else {
-                jsonData.dia_inicio_cert = '';
+                jsonData.dia_inicio_semana = '';
             }
 
-            // Calcular antigüedad
-            const fechaIngreso = document.getElementById('fecha_ingreso').value;
-            if (fechaIngreso) {
-                const fechaIngresoDate = new Date(fechaIngreso);
-                const fechaActual = new Date();
-                
-                // Calcular diferencia en años con precisión
-                let años = fechaActual.getFullYear() - fechaIngresoDate.getFullYear();
-                const mesActual = fechaActual.getMonth();
-                const mesIngreso = fechaIngresoDate.getMonth();
-                
-                // Ajustar si aún no ha cumplido años en el año actual
-                if (mesActual < mesIngreso || (mesActual === mesIngreso && fechaActual.getDate() < fechaIngresoDate.getDate())) {
-                    años--;
-                }
-                
-                // Calcular meses adicionales
-                let meses = mesActual - mesIngreso;
-                if (meses < 0) {
-                    meses += 12;
-                }
-                
-                // Formatear el resultado solo con años y meses
-                let resultado = '';
-                if (años > 0) {
-                    resultado += años + ' año' + (años > 1 ? 's' : '');
-                }
-                if (meses > 0) {
-                    if (resultado) resultado += ', ';
-                    resultado += meses + ' mes' + (meses > 1 ? 'es' : '');
-                }
-                
-                if (!resultado) {
-                    resultado = 'Menos de 1 mes';
-                }
-                
-                jsonData.antiguedad_calculada = resultado;
-                jsonData.antiguedad_anios = años;
-                jsonData.antiguedad_meses = meses;
-            } else {
-                jsonData.antiguedad_calculada = '';
-                jsonData.antiguedad_anios = 0;
-                jsonData.antiguedad_meses = 0;
-            }
+            // Calcular antigüedad usando la función centralizada
+            const antiguedad = calcularAntiguedad();
+            jsonData.antiguedad = antiguedad.texto;
+            jsonData.antiguedad_calculada = antiguedad.texto;
+            jsonData.antiguedad_anios = antiguedad.años;
+            jsonData.antiguedad_meses = antiguedad.meses;
 
             // Obtener el array de partes seleccionadas desde Vue
             if (window.vueApp && Array.isArray(window.vueApp.selectedParts)) {
@@ -586,6 +474,13 @@
             }
 
             jsonData.fecha_registro = new Date().toISOString();
+
+            // Convertir campos específicos a booleanos
+            if (jsonData.requiere_reubicacion) {
+                jsonData.requiere_reubicacion = jsonData.requiere_reubicacion === 'Si' || jsonData.requiere_reubicacion === 'si' || jsonData.requiere_reubicacion === 'true';
+            } else {
+                jsonData.requiere_reubicacion = false;
+            }
 
             return jsonData;
         }
@@ -600,13 +495,18 @@
             // Mostrar alerta de carga
             mostrarAlertaCarga('Registrando control de ausentismo...');
             
-            console.log(JSON.stringify(jsonData, null, 2));
+            console.log('JSON completo a enviar:', JSON.stringify(jsonData, null, 2));
+            console.log('Antigüedad calculada:', jsonData.antiguedad);
+            console.log('Antigüedad años:', jsonData.antiguedad_anios);
+            console.log('Antigüedad meses:', jsonData.antiguedad_meses);
+            console.log('Requiere reubicación (booleano):', jsonData.requiere_reubicacion, typeof jsonData.requiere_reubicacion);
             
-            fetch('/ausentismo/registrar_ausencia', {
+            fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.AUSENTISMO, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + API_CONFIG.TOKEN
                 },
                 body: JSON.stringify(jsonData)
             })
@@ -622,11 +522,72 @@
             })
             .catch(error => {
                 cerrarAlertaCarga();
-                console.error('Error al registrar el accidente:', error);
-                //mostrarAlertaError('Error al registrar el accidente', '¡Error!', true);
+                console.error('Error al registrar el control de ausentismo:', error);
+                mostrarAlertaError('Error al registrar el control de ausentismo', '¡Error!', true);
             });
         });
 
+        function probarAPI() {
+            const datosPrueba = {
+                empresa_id: 456,
+                paciente_id: 789,
+                puesto: "Supervisor",
+                area: "Calidad",
+                fecha_ingreso: "2019-06-10",
+                antiguedad: "4 años, 6 meses",
+                antiguedad_calculada: "4 años, 6 meses",
+                antiguedad_anios: 4,
+                antiguedad_meses: 6,
+
+                obra_social: "Swiss Medical",
+                plan: "Premium",
+                nro_afiliado: "987654321",
+                tipo_licencia: "ART",
+
+                agente_causal: "Herramienta",
+                diagnostico: "Lumbalgia aguda por sobreesfuerzo",
+                tratamiento: "Reposo relativo, antiinflamatorios, fisioterapia. Se indica kinesiología 3 veces por semana.",
+                aseguradora_art: "Si",
+
+                inicio_certificado: "2024-01-05",
+                vto_certificado: "2024-01-20",
+                cantidad_dias: 16,
+                dia_inicio_semana: "Viernes",
+
+                medico_tratante: "Dr. Carlos Fernández",
+                matricula: "MP-54321",
+                especialidad: "Traumatólogo",
+
+                nro_denuncia_art: "ART-2024-001234",
+                tipo_denuncia_art: "Accidente de trabajo",
+
+                partes_afectadas: ["espalda_baja", "columna_lumbar"],
+                medico_auditor: "Dr. Laura Morales",
+
+                fecha_control: "2024-01-18",
+                resultado: "Convalidado",
+                requiere_reubicacion: false,
+                apto_reingreso: "2024-01-21",
+                alta_reingreso: "2024-01-21",
+                dias_ausentismo_control: 16,
+                observaciones: "El paciente presenta buena evolución. Se recomienda reincorporación progresiva con restricciones de carga pesada por 30 días.",
+                fecha_registro: "2024-01-18T14:45:00.000Z"
+            };
+
+            // Usar la función centralizada de busqueda_api.js
+            probarAPI(API_CONFIG.ENDPOINTS.AUSENTISMO, datosPrueba, 'Probando API de ausentismo...');
+        }
+
+        // ========================================
+        // SISTEMA DE BÚSQUEDA CENTRALIZADO
+        // ========================================
+        // Todas las funciones de búsqueda ahora están en busqueda_api.js
+        
+        // Inicializar el sistema de búsqueda cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarSistemaBusqueda();
+        });
+        
     </script>
 
     <?php include 'footer.php'; ?>

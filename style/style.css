@@ -1,93 +1,31 @@
-
-
 .btn-transparent{
-    background-color: #e23189;
-   
-    color: white;
+    background-color: #CC1D7C!important;   
+    color: white!important;
 }
 .btn-transparent:hover{
-    background-color: transparent;
-    color: #e23189;
-    border:1px solid #e23189;
+    background-color: white!important;
+    color: #CC1D7C!important;
+    border: 1px solid #CC1D7C!important;
 }
-.card-header{
-   background-color: #90878c20!important;
-}
-.card-header, .card-body{
-    border:1px solid #e23189;
-}
-#card-form{
-    background-color: rgb(239, 241, 241);
-}
-
-/* Estilos mejorados para el navbar */
-nav{
-    background: #e23189;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(15px);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-}
-
-
-/* Estilos mejorados para los enlaces de navegación */
-.nav-link{
-    color: #fff !important;
-    font-weight: 600;
-    padding: 0.75rem 1.5rem !important;
-    border-radius: 25px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 0 0.5rem;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.9rem;
-}       
-
-/* Estilos para el botón hamburguesa */
-.navbar-toggler {
-    border: none;
-    padding: 0.5rem;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-.navbar-toggler:focus {
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
-}
-
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}                
-
-
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+}
+nav{
+    background: #f8f9fa!important;
+    margin-bottom: 20px;
+}
+.card-form{
+    background: #f3f3f2!important;
 }
 
 .main-content {
     flex: 1;
 }
 
-.hero-section {
-    background-color:rgb(255, 255, 255);
-    padding: 80px 0;
-    color: #333333;
-}
-.hero-section h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
-}
-.hero-section p {
-    font-size: 1.1rem;
-    color: #666666;
-}
 .btn-grid {
-    background: #90878c46;
+    background: #f3f3f2;
     border: none;
     border-radius: 16px;
     color: white;
@@ -109,13 +47,13 @@ body {
     font-size: 3.5rem;
     margin-bottom: 1.5rem;
     display: block;
-    color: #e23189;
+    color: #CC1D7C;
 }
 .btn-grid h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
     font-weight: 600;
-    color: #ffffff;
+    color: #CC1D7C;
     letter-spacing: 0.5px;
 }
 .btn-grid p {
@@ -142,34 +80,4 @@ body {
     margin: 0;
 }
 
-/* Footer Styles */
-footer {
-    background: #e23189;
-    color: white;
-    padding: 1.5rem 0;
-    margin-top: auto;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-}
 
-footer p {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-footer i {
-    color: #ffffff;
-}
-h3{
-    font-size: 2.5rem!important;
-    font-weight: 600;
-    color: #e23189!important;
-}
-
-
-
-
-
-
-
-        

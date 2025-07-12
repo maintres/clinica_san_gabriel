@@ -1,9 +1,9 @@
 
 <?php include 'header.php'; ?>
     <div class="container-fluid container py-4 ">
-        <div class="card shadow " id="card-form" >
-            <div class="card-header bg-transparent text-white">
-                <h3 class="text-center mb-0"><i class="fas fa-clipboard-list me-2"></i>Ficha de Accidente Laboral</h3>
+        <div class="card shadow card-form">
+            <div class="card-header">
+                <h4 class="text-center mb-0"><i class="fas fa-clipboard-list me-2"></i>Ficha de Accidente Laboral</h4>
             </div>
             
             <div class="card-body">
@@ -16,14 +16,11 @@
                     <div class="row mb-3">
                         <div class="col-md-5">
                             <div class="input-group">
-                                <label class="input-group-text" for="razon_social_buscar">Razón Social</label>
-                                <input type="text" class="form-control" id="razon_social_buscar" name="razon_social_buscar" placeholder="Ingrese razón social" list="empresas-list" autocomplete="off">
-                                <datalist id="empresas-list">
-                                    <!-- Las opciones se cargarán dinámicamente -->
-                                </datalist>
-                                <button type="button" class="btn btn-transparent" id="btnBuscarEmpresa">
-                                    <i class="fas fa-search me-1"></i>Buscar
-                                </button>
+                                <label class="input-group-text" for="razon_social_buscar"><i class="fas fa-search me-2"></i>Razón Social</label>
+                                <input type="text" class="form-control" id="razon_social_buscar" name="razon_social_buscar" placeholder="Buscar por razón social" autocomplete="off">
+                                <!--<button type="button" class="btn btn-transparent" id="btnBuscarEmpresa">                                   
+                                     <i class="fas fa-search me-1"></i>Buscar
+                                </button> -->
                             </div>
                         </div>
                     </div>
@@ -268,6 +265,9 @@
                         <button type="submit" class="btn btn-transparent btn-lg" id="btnGuardar">
                             <i class="fas fa-save me-2"></i>Guardar
                         </button>
+                        <button type="button" class="btn btn-warning btn-lg ms-3" id="btnPrueba" onclick="probarAPI()">
+                            <i class="fas fa-flask me-2"></i>Probar API
+                        </button>
                     </div>
                 </form>
                 
@@ -275,9 +275,6 @@
         </div>
     </div>
 
-    <!-- Incluir el archivo JS de búsquedas -->
-    <script src="busqueda_api.js"></script>
-    
     <!-- Incluir SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -285,11 +282,11 @@
     <script src="alertas.js"></script>
 
     <script>
-        // Configuración para el formulario de accidente laboral
+        // Configuración para búsquedas (ya no se usa busquedaAPI)
         const configAccidente = {
             empresas: {
-                inputId: 'razon_social_buscar',
                 btnId: 'btnBuscarEmpresa',
+                inputId: 'razon_social_buscar',
                 empresaIdField: 'empresa_id_hidden',
                 campos: [
                     { id: 'razon_social', apiField: 'razonsocial' },
@@ -297,12 +294,12 @@
                 ]
             },
             empleados: {
-                dniId: 'dni',
                 btnId: 'btnBuscarEmpleado',
+                dniId: 'dni',
                 pacienteIdField: 'paciente_id_hidden',
                 campos: [
-                    { id: 'nombre', apiField: 'nombres' },
-                    { id: 'apellido', apiField: 'apellidos' },
+                    { id: 'nombre', apiField: 'nombre' },
+                    { id: 'apellido', apiField: 'apellido' },
                     { id: 'telefono', apiField: 'telefono' },
                     { id: 'celular', apiField: 'celular' },
                     { id: 'domicilio_empleado', apiField: 'domicilio' }
@@ -310,59 +307,53 @@
             }
         };
 
-        // Inicializar las búsquedas cuando se carga la página
-        document.addEventListener('DOMContentLoaded', function() {
-            busquedaAPI.inicializarBusquedas(configAccidente);
-        });
-
-        // Cálculo automático de antigüedad
-        function calcularAntiguedad() {
-            const fechaIngreso = document.getElementById('fecha_ingreso').value;
-            if (fechaIngreso) {
-                const fechaIngresoDate = new Date(fechaIngreso);
-                const fechaActual = new Date();
-                
-                // Calcular diferencia en años con precisión
-                let años = fechaActual.getFullYear() - fechaIngresoDate.getFullYear();
-                const mesActual = fechaActual.getMonth();
-                const mesIngreso = fechaIngresoDate.getMonth();
-                
-                // Ajustar si aún no ha cumplido años en el año actual
-                if (mesActual < mesIngreso || (mesActual === mesIngreso && fechaActual.getDate() < fechaIngresoDate.getDate())) {
-                    años--;
-                }
-                
-                // Calcular meses adicionales
-                let meses = mesActual - mesIngreso;
-                if (meses < 0) {
-                    meses += 12;
-                }
-                
-                // Formatear el resultado solo con años y meses
-                let resultado = '';
-                if (años > 0) {
-                    resultado += años + ' año' + (años > 1 ? 's' : '');
-                }
-                if (meses > 0) {
-                    if (resultado) resultado += ', ';
-                    resultado += meses + ' mes' + (meses > 1 ? 'es' : '');
-                }
-                
-                if (!resultado) {
-                    resultado = 'Menos de 1 mes';
-                }
-                
-                document.getElementById('antiguedad').value = resultado;
-            }
-        }      
-
-        document.getElementById('fecha_ingreso').addEventListener('change', calcularAntiguedad);
+        // El cálculo de antigüedad ahora se maneja en busqueda_api.js
+        // Se inicializa automáticamente en inicializarSistemaBusqueda()
         
+        // Función para probar la API con datos de prueba específicos para accidentes
+        function probarAPI() {
+            const datosPrueba = {
+                empresa_id: 6,
+                paciente_id: 10,
+                puesto: "Operario de Prueba",
+                area: "Área de Prueba",
+                fecha_ingreso: "2023-01-15",
+                antiguedad: "1 año, 6 meses",
+                antiguedad_calculada: "1 año, 6 meses",
+                antiguedad_anios: 1,
+                antiguedad_meses: 6,
+                obra_social: "OSDE",
+                plan: "310",
+                nro_afiliado: "12345678",
+                testigos: "Testigo de Prueba",
+                tipo_accidente: "Caída de altura",
+                agente_causal: "Escalera",
+                partes_afectadas: ["brazo_derecho", "pierna_izquierda"],
+                descripcion: "Accidente de prueba - El empleado se cayó de una escalera durante tareas de mantenimiento",
+                tipo_lesion: "Fractura",
+                gravedad: "Moderada",
+                derivacion: "Hospital",
+                intervencion_art: true,
+                dias_baja: 15,
+                diagnostico: "Fractura de radio distal - PRUEBA",
+                proximo_control: "2024-02-15",
+                medico_inicial: "Dr. García - PRUEBA",
+                matricula: "12345",
+                observaciones: "Este es un registro de prueba para verificar la funcionalidad de la API",
+                fecha_registro: new Date().toISOString()
+            };
 
+            // Usar la función centralizada de busqueda_api.js
+            probarAPI(API_CONFIG.ENDPOINTS.ACCIDENTES, datosPrueba, 'Probando API de accidentes...');
+        }
         
         // Función para obtener el JSON desde el formulario
         function obtenerJsonDesdeFormulario() {
             const form = document.getElementById('accidentForm');
+            if (!form) {
+                throw new Error('No se encontró el formulario de accidente');
+            }
+            
             const formData = new FormData(form);
             const jsonData = {};
 
@@ -375,7 +366,7 @@
             });
 
             // Obtener el array de partes seleccionadas desde Vue
-            if (window.vueApp && Array.isArray(window.vueApp.selectedParts)) {
+            if (window.vueApp && window.vueApp.selectedParts && Array.isArray(window.vueApp.selectedParts)) {
                 jsonData.partes_afectadas = window.vueApp.selectedParts;
             } else {
                 jsonData.partes_afectadas = [];
@@ -403,52 +394,12 @@
                 jsonData.paciente_id = parseInt(jsonData.paciente_id);
             }
 
-            // Calcular antigüedad
-            const fechaIngreso = document.getElementById('fecha_ingreso').value;
-            if (fechaIngreso) {
-                const fechaIngresoDate = new Date(fechaIngreso);
-                const fechaActual = new Date();
-                
-                // Calcular diferencia en años con precisión
-                let años = fechaActual.getFullYear() - fechaIngresoDate.getFullYear();
-                const mesActual = fechaActual.getMonth();
-                const mesIngreso = fechaIngresoDate.getMonth();
-                
-                // Ajustar si aún no ha cumplido años en el año actual
-                if (mesActual < mesIngreso || (mesActual === mesIngreso && fechaActual.getDate() < fechaIngresoDate.getDate())) {
-                    años--;
-                }
-                
-                // Calcular meses adicionales
-                let meses = mesActual - mesIngreso;
-                if (meses < 0) {
-                    meses += 12;
-                }
-                
-                // Formatear el resultado solo con años y meses
-                let resultado = '';
-                if (años > 0) {
-                    resultado += años + ' año' + (años > 1 ? 's' : '');
-                }
-                if (meses > 0) {
-                    if (resultado) resultado += ', ';
-                    resultado += meses + ' mes' + (meses > 1 ? 'es' : '');
-                }
-                
-                if (!resultado) {
-                    resultado = 'Menos de 1 mes';
-                }
-                
-                jsonData.antiguedad = resultado;
-                jsonData.antiguedad_calculada = resultado;
-                jsonData.antiguedad_anios = años;
-                jsonData.antiguedad_meses = meses;
-            } else {
-                jsonData.antiguedad = '';
-                jsonData.antiguedad_calculada = '';
-                jsonData.antiguedad_anios = 0;
-                jsonData.antiguedad_meses = 0;
-            }
+            // Calcular antigüedad usando la función centralizada
+            const antiguedad = calcularAntiguedad();
+            jsonData.antiguedad = antiguedad.texto;
+            jsonData.antiguedad_calculada = antiguedad.texto;
+            jsonData.antiguedad_anios = antiguedad.años;
+            jsonData.antiguedad_meses = antiguedad.meses;
 
             // Agregar fecha de registro
             jsonData.fecha_registro = new Date().toISOString();
@@ -461,16 +412,29 @@
                 throw new Error(`Campos requeridos faltantes: ${camposFaltantes.join(', ')}`);
             }
 
+            // Verificar que jsonData se construyó correctamente
+            if (!jsonData || typeof jsonData !== 'object') {
+                throw new Error('Error al construir el JSON del formulario');
+            }
+
             return jsonData;
         }
+        
 
         // Envío del formulario usando el JSON generado
         document.getElementById('accidentForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            let jsonData;
+            
             try {
                 // Generar el JSON
-                const jsonData = obtenerJsonDesdeFormulario();
+                jsonData = obtenerJsonDesdeFormulario();
+                
+                // Verificar que jsonData se generó correctamente
+                if (!jsonData) {
+                    throw new Error('No se pudo generar el JSON del formulario');
+                }
 
                 // Mostrar alerta de carga
                 mostrarAlertaCarga('Registrando accidente...');
@@ -480,19 +444,20 @@
                 
                 // También mostrar en una alerta informativa (solo en desarrollo)
                 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    console.log('Datos a enviar a la API local:', {
-                        url: '/accidentologia/registrar_accidente',
+                    console.log('Datos a enviar a la API externa:', {
+                        url: 'https://preocupacionales.sangabrielsj.com/api/accidentologia/accidente',
                         method: 'POST',
                         data: jsonData
                     });
                 }
 
-                // Enviar a la API
-                fetch('/accidentologia/registrar_accidente', {
+                // Enviar directamente a la API externa
+                fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.ACCIDENTES, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + API_CONFIG.TOKEN
                     },
                     body: JSON.stringify(jsonData)
                 })
@@ -521,6 +486,16 @@
                 console.error('Error en la validación:', error);
                 mostrarAlertaError(`Error de validación: ${error.message}`, '¡Error de Validación!');
             }
+        });
+
+        // ========================================
+        // SISTEMA DE BÚSQUEDA CENTRALIZADO
+        // ========================================
+        // Todas las funciones de búsqueda ahora están en busqueda_api.js
+        
+        // Inicializar el sistema de búsqueda cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarSistemaBusqueda();
         });
     </script>
 
