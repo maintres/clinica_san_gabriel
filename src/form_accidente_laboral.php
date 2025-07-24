@@ -1,5 +1,5 @@
 
-<?php include 'header.php'; ?>
+<?php include 'layouts/header.php'; ?>
     <div class="container-fluid container py-4 ">
         <div class="card shadow card-form">
             <div class="card-header">
@@ -265,9 +265,7 @@
                         <button type="submit" class="btn btn-transparent btn-lg" id="btnGuardar">
                             <i class="fas fa-save me-2"></i>Guardar
                         </button>
-                        <button type="button" class="btn btn-warning btn-lg ms-3" id="btnPrueba" onclick="probarAPI()">
-                            <i class="fas fa-flask me-2"></i>Probar API
-                        </button>
+
                     </div>
                 </form>
                 
@@ -279,7 +277,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Incluir funciones de alerta -->
-    <script src="alertas.js"></script>
+    <script src="assets/js/alertas.js"></script>
 
     <script>
         // Configuración para búsquedas (ya no se usa busquedaAPI)
@@ -310,42 +308,7 @@
         // El cálculo de antigüedad ahora se maneja en busqueda_api.js
         // Se inicializa automáticamente en inicializarSistemaBusqueda()
         
-        // Función para probar la API con datos de prueba específicos para accidentes
-        function probarAPI() {
-            const datosPrueba = {
-                empresa_id: 6,
-                paciente_id: 10,
-                puesto: "Operario de Prueba",
-                area: "Área de Prueba",
-                fecha_ingreso: "2023-01-15",
-                antiguedad: "1 año, 6 meses",
-                antiguedad_calculada: "1 año, 6 meses",
-                antiguedad_anios: 1,
-                antiguedad_meses: 6,
-                obra_social: "OSDE",
-                plan: "310",
-                nro_afiliado: "12345678",
-                testigos: "Testigo de Prueba",
-                tipo_accidente: "Caída de altura",
-                agente_causal: "Escalera",
-                partes_afectadas: ["brazo_derecho", "pierna_izquierda"],
-                descripcion: "Accidente de prueba - El empleado se cayó de una escalera durante tareas de mantenimiento",
-                tipo_lesion: "Fractura",
-                gravedad: "Moderada",
-                derivacion: "Hospital",
-                intervencion_art: true,
-                dias_baja: 15,
-                diagnostico: "Fractura de radio distal - PRUEBA",
-                proximo_control: "2024-02-15",
-                medico_inicial: "Dr. García - PRUEBA",
-                matricula: "12345",
-                observaciones: "Este es un registro de prueba para verificar la funcionalidad de la API",
-                fecha_registro: new Date().toISOString()
-            };
 
-            // Usar la función centralizada de busqueda_api.js
-            probarAPI(API_CONFIG.ENDPOINTS.ACCIDENTES, datosPrueba, 'Probando API de accidentes...');
-        }
         
         // Función para obtener el JSON desde el formulario
         function obtenerJsonDesdeFormulario() {
@@ -439,17 +402,7 @@
                 // Mostrar alerta de carga
                 mostrarAlertaCarga('Registrando accidente...');
 
-                // Mostrar en consola para debugging
-                console.log('JSON a enviar:', JSON.stringify(jsonData, null, 2));
-                
-                // También mostrar en una alerta informativa (solo en desarrollo)
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    console.log('Datos a enviar a la API externa:', {
-                        url: 'https://preocupacionales.sangabrielsj.com/api/accidentologia/accidente',
-                        method: 'POST',
-                        data: jsonData
-                    });
-                }
+
 
                 // Enviar directamente a la API externa
                 fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.ACCIDENTES, {
@@ -499,4 +452,4 @@
         });
     </script>
 
-    <?php include 'footer.php'; ?>
+    <?php include 'layouts/footer.php'; ?>

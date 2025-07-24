@@ -66,7 +66,7 @@
                             Vista Frontal <span class="text-muted mx-5 px-3"></span> Vista Posterior
                         </h6>
                         <div class="human-body d-inline-block" @click="part_clicked">                                            
-                            <?php include 'img/svg-cuerpo.svg'; ?>
+                            <?php include '../public/assets/img/svg-cuerpo.svg'; ?>
                         </div>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                         this.selectedElements.splice(partIndex, 1);
                         clickedElement.classList.remove('selected');
                         
-                        console.log('Parte removida:', partName);
+
                     }
                     
                 }
@@ -161,7 +161,7 @@
                     element.classList.remove('selected');
                 }
                 
-                console.log('Parte removida desde lista:', partName);
+
             },
             
             clearAll() {

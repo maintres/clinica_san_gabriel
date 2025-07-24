@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include 'layouts/header.php'; ?>
     <div class="container-fluid container py-4">
         <div class="card shadow card-form">
             <div class="card-header">
@@ -367,9 +367,7 @@
                         <button type="submit" class="btn btn-transparent btn-lg">
                             <i class="fas fa-save me-2"></i>Guardar
                         </button>
-                        <button type="button" class="btn btn-warning btn-lg ms-3" id="btnPrueba" onclick="probarAPI()">
-                            <i class="fas fa-flask me-2"></i>Probar API
-                        </button>
+
                     </div>
                 </form>
                 
@@ -381,7 +379,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Incluir funciones de alerta -->
-    <script src="alertas.js"></script>
+    <script src="assets/js/alertas.js"></script>
 
     <script>
         // Cálculo automático de días de ausentismo
@@ -495,11 +493,7 @@
             // Mostrar alerta de carga
             mostrarAlertaCarga('Registrando control de ausentismo...');
             
-            console.log('JSON completo a enviar:', JSON.stringify(jsonData, null, 2));
-            console.log('Antigüedad calculada:', jsonData.antiguedad);
-            console.log('Antigüedad años:', jsonData.antiguedad_anios);
-            console.log('Antigüedad meses:', jsonData.antiguedad_meses);
-            console.log('Requiere reubicación (booleano):', jsonData.requiere_reubicacion, typeof jsonData.requiere_reubicacion);
+
             
             fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.AUSENTISMO, {
                 method: 'POST',
@@ -527,56 +521,7 @@
             });
         });
 
-        function probarAPI() {
-            const datosPrueba = {
-                empresa_id: 456,
-                paciente_id: 789,
-                puesto: "Supervisor",
-                area: "Calidad",
-                fecha_ingreso: "2019-06-10",
-                antiguedad: "4 años, 6 meses",
-                antiguedad_calculada: "4 años, 6 meses",
-                antiguedad_anios: 4,
-                antiguedad_meses: 6,
 
-                obra_social: "Swiss Medical",
-                plan: "Premium",
-                nro_afiliado: "987654321",
-                tipo_licencia: "ART",
-
-                agente_causal: "Herramienta",
-                diagnostico: "Lumbalgia aguda por sobreesfuerzo",
-                tratamiento: "Reposo relativo, antiinflamatorios, fisioterapia. Se indica kinesiología 3 veces por semana.",
-                aseguradora_art: "Si",
-
-                inicio_certificado: "2024-01-05",
-                vto_certificado: "2024-01-20",
-                cantidad_dias: 16,
-                dia_inicio_semana: "Viernes",
-
-                medico_tratante: "Dr. Carlos Fernández",
-                matricula: "MP-54321",
-                especialidad: "Traumatólogo",
-
-                nro_denuncia_art: "ART-2024-001234",
-                tipo_denuncia_art: "Accidente de trabajo",
-
-                partes_afectadas: ["espalda_baja", "columna_lumbar"],
-                medico_auditor: "Dr. Laura Morales",
-
-                fecha_control: "2024-01-18",
-                resultado: "Convalidado",
-                requiere_reubicacion: false,
-                apto_reingreso: "2024-01-21",
-                alta_reingreso: "2024-01-21",
-                dias_ausentismo_control: 16,
-                observaciones: "El paciente presenta buena evolución. Se recomienda reincorporación progresiva con restricciones de carga pesada por 30 días.",
-                fecha_registro: "2024-01-18T14:45:00.000Z"
-            };
-
-            // Usar la función centralizada de busqueda_api.js
-            probarAPI(API_CONFIG.ENDPOINTS.AUSENTISMO, datosPrueba, 'Probando API de ausentismo...');
-        }
 
         // ========================================
         // SISTEMA DE BÚSQUEDA CENTRALIZADO
@@ -590,4 +535,4 @@
         
     </script>
 
-    <?php include 'footer.php'; ?>
+    <?php include 'layouts/footer.php'; ?>

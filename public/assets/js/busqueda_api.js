@@ -99,8 +99,6 @@ let empresasFiltradas = [];
  * Carga todas las empresas desde la API
  */
 function cargarEmpresas() {
-    console.log('Cargando empresas desde la API externa...');
-    console.log('URL:', API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.EMPRESAS);
     
     fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.EMPRESAS, {
         method: 'GET',
@@ -117,30 +115,20 @@ function cargarEmpresas() {
         return response.json();
     })
     .then(data => {
-        console.log('Respuesta completa de empresas:', data);
-        console.log('Tipo de data:', typeof data);
-        console.log('Tiene data:', data && data.hasOwnProperty('data'));
-        console.log('Data tiene listado:', data && data.data && data.data.hasOwnProperty('listado'));
-        console.log('Listado es array:', data && data.data && data.data.listado && Array.isArray(data.data.listado));
-        
         // Verificar si la respuesta tiene la estructura esperada: {data: {listado: [...]}}
         if (data && data.data && data.data.listado && Array.isArray(data.data.listado)) {
             todasLasEmpresas = data.data.listado;
-            console.log(`Se cargaron ${data.data.listado.length} empresas`);
             actualizarDatalistEmpresas(todasLasEmpresas);
         } else if (data && data.data && Array.isArray(data.data)) {
             // Formato alternativo: {data: [...]}
             todasLasEmpresas = data.data;
-            console.log(`Se cargaron ${data.data.length} empresas (formato alternativo)`);
             actualizarDatalistEmpresas(todasLasEmpresas);
         } else if (data && Array.isArray(data)) {
             // Formato directo: [...]
             todasLasEmpresas = data;
-            console.log(`Se cargaron ${data.length} empresas (formato directo)`);
             actualizarDatalistEmpresas(todasLasEmpresas);
         } else {
             console.error('Formato de respuesta inválido:', data);
-            console.error('Estructura de data:', JSON.stringify(data, null, 2));
             mostrarAlertaError('Error al cargar empresas: formato de respuesta inválido', 'Error de formato');
         }
     })
@@ -253,7 +241,7 @@ function actualizarDatalistEmpresas(empresas) {
         input.parentNode.appendChild(dropdownContainer);
     }
     
-    console.log(`Dropdown actualizado con ${empresas.length} empresas`);
+
 }
 
 /**
@@ -301,7 +289,6 @@ function filtrarEmpresas(texto) {
     
     actualizarDatalistEmpresas(empresasFiltradas);
     mostrarDropdownEmpresas();
-    console.log(`Filtradas ${empresasFiltradas.length} empresas para "${texto}"`);
 }
 
 /**
@@ -351,9 +338,6 @@ function mostrarDatosEmpresa(empresa) {
     document.querySelector('input[name="razon_social"]').value = empresa.razonsocial || empresa.razon_social || '';
     document.querySelector('input[name="domicilio_empresa"]').value = empresa.domicilio || '';
     document.getElementById('empresa_id_hidden').value = empresa.id || empresa.empresa_id || '';
-    
-    console.log('Datos de empresa cargados:', empresa);
-    console.log('ID de empresa guardado:', empresa.id || empresa.empresa_id);
 }
 
 /**
@@ -414,19 +398,15 @@ function buscarEmpleado() {
         if (data && data.data && data.data.listado && Array.isArray(data.data.listado)) {
             // Tomar el primer empleado de la lista
             empleado = data.data.listado[0];
-            console.log('Empleado encontrado en listado:', empleado);
         } else if (data && data.data && Array.isArray(data.data)) {
             // Formato alternativo: {data: [...]}
             empleado = data.data[0];
-            console.log('Empleado encontrado en data:', empleado);
         } else if (data && Array.isArray(data)) {
             // Formato directo: [...]
             empleado = data[0];
-            console.log('Empleado encontrado en array directo:', empleado);
         } else if (data && data.id) {
             // Formato individual: {id: ..., nombre: ..., ...}
             empleado = data;
-            console.log('Empleado encontrado como objeto individual:', empleado);
         }
         
         if (empleado && empleado.id) {
@@ -464,8 +444,6 @@ function mostrarDatosEmpleado(empleado) {
     document.querySelector('input[name="celular"]').value = empleado.celular || '';
     document.querySelector('input[name="domicilio_empleado"]').value = empleado.domicilio || '';
     document.getElementById('paciente_id_hidden').value = empleado.id || empleado.paciente_id || '';
-    
-    console.log('Datos de empleado cargados:', empleado);
 }
 
 /**
@@ -486,90 +464,7 @@ function limpiarDatosEmpleado() {
     document.getElementById('paciente_id_hidden').value = '';
 }
 
-// ========================================
-// FUNCIONES DE PRUEBA DE API
-// ========================================
 
-/**
- * Función genérica para probar APIs
- * @param {string} endpoint - Endpoint de la API a probar
- * @param {object} datosPrueba - Datos de prueba a enviar
- * @param {string} mensajeCarga - Mensaje para mostrar durante la carga
- */
-function probarAPI(endpoint, datosPrueba, mensajeCarga = 'Probando API con datos de prueba...') {
-    console.log('Iniciando prueba de API...');
-    console.log('URL de la API externa:', API_CONFIG.BASE_URL + endpoint);
-    console.log('Datos de prueba a enviar:', JSON.stringify(datosPrueba, null, 2));
-    
-    // Mostrar alerta de carga
-    mostrarAlertaCarga(mensajeCarga);
-    
-    fetch(API_CONFIG.BASE_URL + endpoint, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' + API_CONFIG.TOKEN
-        },
-        body: JSON.stringify(datosPrueba)
-    })
-    .then(response => {
-        console.log('Respuesta HTTP:', response.status, response.statusText);
-        console.log('Headers de respuesta:', response.headers);
-        
-        // Primero obtener el texto de la respuesta para debugging
-        return response.text().then(text => {
-            console.log('Respuesta completa (texto):', text);
-            console.log('Longitud de la respuesta:', text.length);
-            
-            // Intentar parsear como JSON
-            let parsedData;
-            try {
-                parsedData = JSON.parse(text);
-                return parsedData;
-            } catch (parseError) {
-                console.error('Error al parsear JSON:', parseError);
-                console.error('Texto que causó el error:', text);
-                throw new Error(`Error al parsear respuesta JSON: ${parseError.message}. Respuesta recibida: ${text.substring(0, 200)}...`);
-            }
-        });
-    })
-    .then(data => {
-        cerrarAlertaCarga();
-        console.log('Respuesta de la API:', data);
-        
-        if (data.error) {
-            throw new Error(data.message || 'Error en el servidor');
-        }
-        
-        mostrarAlertaExito(
-            `¡Prueba exitosa!<br><br>
-            <strong>Respuesta del servidor:</strong><br>
-            <pre style="text-align: left; font-size: 12px; max-height: 200px; overflow-y: auto;">${JSON.stringify(data, null, 2)}</pre>`, 
-            '¡API Funcionando Correctamente!', 
-            false
-        );
-    })
-    .catch(error => {
-        cerrarAlertaCarga();
-        console.error('Error en la prueba:', error);
-        
-        // Mostrar información detallada del error
-        let errorDetails = `Error en la prueba de API:<br><br>
-            <strong>Mensaje de error:</strong><br>
-            ${error.message}<br><br>
-            <strong>Información adicional:</strong><br>
-            • Tipo de error: ${error.name}<br>
-            • Stack trace disponible en consola<br><br>
-            <strong>Verifica:</strong><br>
-            • Que el servidor esté funcionando<br>
-            • Que la API externa esté disponible<br>
-            • Que el token de autorización sea válido<br>
-            • Que los IDs de empresa y paciente existan`;
-        
-        mostrarAlertaError(errorDetails, '¡Error en la Prueba!');
-    });
-}
 
 // ========================================
 // FUNCIONES DE INICIALIZACIÓN

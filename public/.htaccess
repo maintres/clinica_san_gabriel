@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Redirigir peticiones POST de accidentes y ausentismo al archivo api.php
+RewriteCond %{REQUEST_METHOD} POST
+RewriteCond %{REQUEST_URI} ^/(accidentologia|ausentismo)/
+RewriteRule ^(.*)$ api.php [QSA,L]
+
+# Para el resto de archivos, usar index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php? [QSA,L]
