@@ -60,7 +60,8 @@
             </div>
             <!-- Contenedor del cuerpo -->
             <div class="row">
-                <div class="col-6">
+                <!-- Cambiar col-6 por col-12 col-md-6 para que en móviles sea full width -->
+                <div class="col-12 col-md-6 mb-3">
                     <div class="bg-light rounded p-2 text-center">
                         <h6 class="mb-2">
                             Vista Frontal <span class="text-muted mx-5 px-3"></span> Vista Posterior
@@ -70,7 +71,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <!-- Cambiar col-6 por col-12 col-md-6 para que en móviles sea full width -->
+                <div class="col-12 col-md-6">
                     <div class="bg-light rounded p-3">
                         <h6 class="mb-3">
                             <i class="fas fa-list me-2"></i>
